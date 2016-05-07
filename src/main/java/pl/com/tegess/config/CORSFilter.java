@@ -13,9 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Szymek on 13/12/15.
- */
 @Configuration
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSFilter extends OncePerRequestFilter {
