@@ -12,7 +12,7 @@ public class FacebookUtils {
     }
 
     public static String prepareTokenRequest(Application application, String code) {
-        return "https://facebook.com/v2.6/oauth/access_token?" +
+        return "https://graph.facebook.com/v2.6/oauth/access_token?" +
                 "client_id=" + application.getFacebookAppId() +
                 "&redirect_uri=http://51.255.48.55:8085/api/token?appId=" + application.getAppId() +
                 "&client_secret=" + application.getSecret() +
