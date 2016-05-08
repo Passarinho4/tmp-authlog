@@ -27,7 +27,7 @@ public class FacebookUtils {
     }
 
     public static String prepareApplicationTokenRequest(Application application) {
-        return "/oauth/access_token?" +
+        return "https://graph.facebook.com/v2.6/oauth/access_token?" +
                 "client_id=" + application.getAppId() +
                 "&client_secret=" + application.getSecret() +
                 "&grant_type=client_credentials";
