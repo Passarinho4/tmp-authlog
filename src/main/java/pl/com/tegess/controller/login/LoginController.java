@@ -1,8 +1,13 @@
 package pl.com.tegess.controller.login;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -11,6 +16,7 @@ import pl.com.tegess.domain.application.ApplicationRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
@@ -40,23 +46,20 @@ public class LoginController {
 
         Application application = repository.findOne(new ObjectId(appId));
 
-        String redirectURI = FacebookUtils.prepareTokenRequest(application, code);
+        String tokenRequest = FacebookUtils.prepareTokenRequest(application, code);
 
-        System.out.println(redirectURI);
+        SimpleClientHttpRequestFactory httpRequestFactory = new SimpleClientHttpRequestFactory();
+        ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(tokenRequest), HttpMethod.GET);
+        ClientHttpResponse response = request.execute();
 
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(redirectURI);
-        return redirectView;
-    }
-
-    @RequestMapping(value = "api/logged", method = RequestMethod.POST)
-    public RedirectView token(@RequestParam String appId, @RequestBody FacebookTokenResponse tokenResponse){
+        ObjectMapper mapper = new ObjectMapper();
+        FacebookTokenResponse tokenResponse = mapper.readValue(response.getBody(), FacebookTokenResponse.class);
 
         System.out.println(tokenResponse.toString());
 
-        Application application = repository.findOne(new ObjectId(appId));
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(application.getRedirectURI());
+        redirectView.setUrl("http://google.com");
+
         return redirectView;
     }
 }
