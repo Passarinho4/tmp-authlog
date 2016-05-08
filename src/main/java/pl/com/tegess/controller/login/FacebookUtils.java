@@ -3,6 +3,9 @@ package pl.com.tegess.controller.login;
 import pl.com.tegess.controller.login.request.FacebookTokenResponse;
 import pl.com.tegess.domain.application.Application;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class FacebookUtils {
 
 
@@ -26,10 +29,10 @@ public class FacebookUtils {
                 "&access_token="+applicationToken;
     }
 
-    public static String prepareApplicationTokenRequest(Application application) {
-        return "https://graph.facebook.com/v2.6/oauth/access_token?" +
+    public static String prepareApplicationTokenRequest(Application application) throws UnsupportedEncodingException {
+        return URLEncoder.encode("https://graph.facebook.com/v2.6/oauth/access_token?" +
                 "client_id=" + application.getFacebookAppId() +
                 "&client_secret=" + application.getSecret() +
-                "&grant_type=client_credentials";
+                "&grant_type=client_credentials", "UTF-8");
     }
 }
