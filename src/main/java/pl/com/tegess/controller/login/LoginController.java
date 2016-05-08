@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
+import pl.com.tegess.controller.login.request.FacebookApplicationTokenResponse;
 import pl.com.tegess.controller.login.request.FacebookTokenResponse;
 import pl.com.tegess.controller.login.request.FacebookValidateTokenResponse;
 import pl.com.tegess.domain.application.Application;
@@ -45,34 +46,17 @@ public class LoginController {
             @RequestParam String appId,
             @RequestParam String code) throws Exception {
 
-        //Firstly we need obtain token from FB.
         Application application = repository.findOne(new ObjectId(appId));
 
-        String tokenRequestURI = FacebookUtils.prepareTokenRequest(application, code);
+        //Firstly we need obtain token from FB.
+        FacebookTokenResponse facebookTokenResponse = getFacebookTokenResponse(code, application);
 
-        ClientHttpRequest tokenRequest = httpRequestFactory.createRequest(URI.create(tokenRequestURI), HttpMethod.GET);
-        ClientHttpResponse tokenResponse = tokenRequest.execute();
-
-        ObjectMapper mapper = new ObjectMapper();
-        FacebookTokenResponse facebookTokenResponse = mapper.readValue(tokenResponse.getBody(), FacebookTokenResponse.class);
-
-        System.out.println(tokenResponse.toString());
+        //Next, we need get our application token
+        String applicationToken = getFacebookApplicationToken(application);
 
         //Next, we need validate this token
-
-        String validateTokenRequestURI = FacebookUtils.prepareValidateTokenRequest(application, facebookTokenResponse);
-
-        ClientHttpRequest validateTokenRequest =
-                httpRequestFactory.createRequest(URI.create(validateTokenRequestURI), HttpMethod.GET);
-
-        ClientHttpResponse validateTokenResponse = validateTokenRequest.execute();
-
         FacebookValidateTokenResponse facebookValidateTokenResponse =
-                mapper.readValue(validateTokenResponse.getBody(), FacebookValidateTokenResponse.class);
-
-        if(!facebookValidateTokenResponse.getData().getAppId().equals(appId)){
-            throw new Exception("Something went wrong!!!");
-        }
+                getFacebookValidateTokenResponse(application, facebookTokenResponse, applicationToken);
 
         System.out.println("User id = " + facebookValidateTokenResponse.getData().getUserId());
 
@@ -81,5 +65,52 @@ public class LoginController {
         redirectView.setUrl("http://google.com");
 
         return redirectView;
+    }
+
+    private String getFacebookApplicationToken(Application application) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String requestURI = FacebookUtils.prepareApplicationTokenRequest(application);
+
+        ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(requestURI), HttpMethod.GET);
+
+        ClientHttpResponse response = request.execute();
+
+        FacebookApplicationTokenResponse facebookApplicationTokenResponse =
+                mapper.readValue(response.getBody(), FacebookApplicationTokenResponse.class);
+
+        return facebookApplicationTokenResponse.getAccess_token();
+    }
+
+    private FacebookValidateTokenResponse getFacebookValidateTokenResponse(Application application, FacebookTokenResponse facebookTokenResponse, String applicationToken) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String requestURI = FacebookUtils.prepareValidateTokenRequest(facebookTokenResponse, applicationToken);
+
+        ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(requestURI), HttpMethod.GET);
+
+        ClientHttpResponse response = request.execute();
+
+        FacebookValidateTokenResponse facebookValidateTokenResponse =
+                mapper.readValue(response.getBody(), FacebookValidateTokenResponse.class);
+
+        if(!facebookValidateTokenResponse.getData().getAppId().equals(application.getAppId().toString())){
+            throw new Exception("Something went wrong!!!");
+        }
+        return facebookValidateTokenResponse;
+    }
+
+    private FacebookTokenResponse getFacebookTokenResponse(String code, Application application) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String requestURI = FacebookUtils.prepareTokenRequest(application, code);
+
+        ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(requestURI), HttpMethod.GET);
+        ClientHttpResponse response = request.execute();
+
+        FacebookTokenResponse facebookTokenResponse = mapper.readValue(response.getBody(), FacebookTokenResponse.class);
+
+        System.out.println(response.toString());
+        return facebookTokenResponse;
     }
 }
