@@ -12,6 +12,8 @@ import pl.com.tegess.domain.application.ApplicationRepository;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Map;
 
 @RestController
 @Component
@@ -39,6 +41,15 @@ public class LoginController {
             HttpServletRequest facebookResponse) throws IOException {
 
         String string = IOUtils.toString(facebookResponse.getInputStream(), Charset.defaultCharset());
+        Map<String, String[]> parameterMap = facebookResponse.getParameterMap();
+
+        parameterMap.entrySet().
+                forEach(
+                        stringEntry ->
+                                System.out.println(
+                                        stringEntry.getKey() +
+                                                Arrays.toString(stringEntry.getValue())
+                                ));
 
         System.out.println("Handling response from FB for applicationId = " + appId);
         System.out.println(string);
