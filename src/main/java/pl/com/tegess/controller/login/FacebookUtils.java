@@ -23,16 +23,17 @@ public class FacebookUtils {
                 "&code=" + code;
     }
 
-    public static String prepareValidateTokenRequest(FacebookTokenResponse tokenResponse, String applicationToken) {
+    public static String prepareValidateTokenRequest(FacebookTokenResponse tokenResponse, String applicationToken)
+            throws UnsupportedEncodingException {
         return "https://graph.facebook.com/debug_token?" +
                 "input_token=" + tokenResponse.getAccess_token() +
-                "&access_token="+applicationToken;
+                "&access_token="+ URLEncoder.encode(applicationToken, "UTF-8");
     }
 
-    public static String prepareApplicationTokenRequest(Application application) throws UnsupportedEncodingException {
+    public static String prepareApplicationTokenRequest(Application application) {
         return "https://graph.facebook.com/v2.6/oauth/access_token?" +
                 "client_id=" + application.getFacebookAppId() +
-                "&client_secret=" + URLEncoder.encode(application.getSecret(), "UTF-8") +
+                "&client_secret=" + application.getSecret() +
                 "&grant_type=client_credentials";
     }
 }
