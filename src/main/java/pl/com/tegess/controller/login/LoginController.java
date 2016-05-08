@@ -49,7 +49,7 @@ public class LoginController {
         return redirectView;
     }
 
-    @RequestMapping(value = "api/token", method = RequestMethod.GET)
+    @RequestMapping(value = "api/logged", method = RequestMethod.POST)
     public RedirectView token(@RequestParam String appId, @RequestBody FacebookTokenResponse tokenResponse){
 
         System.out.println(tokenResponse.toString());
