@@ -28,7 +28,7 @@ public class LoginController {
         RedirectView view = new RedirectView();
         view.setUrl("https://facebook.com/dialog/oauth?" +
                 "  client_id=" + application.getFacebookAppId() +
-                "  &redirect_uri=http://51.255.48.55:8085/api/logged?appId="+appId+"&type=FB");
+                "  &redirect_uri=http://51.255.48.55:8085/api/logged?appId="+appId);
 
         return view;
     }
@@ -36,7 +36,6 @@ public class LoginController {
     @RequestMapping(value = "api/logged", method = RequestMethod.GET)
     public RedirectView logged(
             @RequestParam String appId,
-            @RequestParam String type,
             HttpServletRequest facebookResponse) throws IOException {
 
         String string = IOUtils.toString(facebookResponse.getInputStream(), Charset.defaultCharset());
