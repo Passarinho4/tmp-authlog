@@ -28,9 +28,7 @@ public class LoginController {
         Application application = repository.findOne(new ObjectId(appId));
 
         RedirectView view = new RedirectView();
-        view.setUrl("https://facebook.com/dialog/oauth?" +
-                "  client_id=" + application.getFacebookAppId() +
-                "  &redirect_uri=http://51.255.48.55:8085/api/logged?appId="+appId);
+        view.setUrl(FacebookUtils.prepareCodeRequest(application));
 
         return view;
     }
@@ -38,21 +36,11 @@ public class LoginController {
     @RequestMapping(value = "api/logged", method = RequestMethod.GET)
     public RedirectView logged(
             @RequestParam String appId,
-            HttpServletRequest facebookResponse) throws IOException {
+            @RequestParam String code) throws IOException {
 
-        String string = IOUtils.toString(facebookResponse.getInputStream(), Charset.defaultCharset());
-        Map<String, String[]> parameterMap = facebookResponse.getParameterMap();
-
-        parameterMap.entrySet().
-                forEach(
-                        stringEntry ->
-                                System.out.println(
-                                        stringEntry.getKey() +
-                                                Arrays.toString(stringEntry.getValue())
-                                ));
 
         System.out.println("Handling response from FB for applicationId = " + appId);
-        System.out.println(string);
+        System.out.println("Code = " + code);
 
         String redirectURI = repository.findOne(new ObjectId(appId)).getRedirectURI();
         System.out.println("Redirecting to " + redirectURI);
