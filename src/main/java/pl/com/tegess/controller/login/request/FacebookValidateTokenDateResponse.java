@@ -1,5 +1,8 @@
 package pl.com.tegess.controller.login.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FacebookValidateTokenDateResponse {
 
     private String app_id;
