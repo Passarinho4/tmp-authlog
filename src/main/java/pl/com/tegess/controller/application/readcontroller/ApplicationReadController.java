@@ -25,6 +25,7 @@ public class ApplicationReadController {
                 .map(application -> new ApplicationData(
                         application.getAppId().toString(),
                         application.getFacebookAppId(),
+                        application.getSecret(),
                         application.getRedirectURI()))
                 .collect(Collectors.toList());
 

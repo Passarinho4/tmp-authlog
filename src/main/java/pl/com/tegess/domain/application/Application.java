@@ -8,11 +8,13 @@ public class Application {
     @Id
     private final ObjectId appId;
     private final String facebookAppId;
+    private final String secret;
     private final String redirectURI;
 
-    public Application(ObjectId appId, String facebookAppId, String redirectURI) {
+    public Application(ObjectId appId, String facebookAppId, String secret, String redirectURI) {
         this.appId = appId;
         this.facebookAppId = facebookAppId;
+        this.secret = secret;
         this.redirectURI = redirectURI;
     }
 
@@ -26,5 +28,9 @@ public class Application {
 
     public String getRedirectURI() {
         return redirectURI;
+    }
+
+    public String getSecret() {
+        return secret;
     }
 }
