@@ -38,15 +38,23 @@ public class LoginController {
             @RequestParam String appId,
             @RequestParam String code) throws IOException {
 
+        Application application = repository.findOne(new ObjectId(appId));
 
-        System.out.println("Handling response from FB for applicationId = " + appId);
-        System.out.println("Code = " + code);
-
-        String redirectURI = repository.findOne(new ObjectId(appId)).getRedirectURI();
-        System.out.println("Redirecting to " + redirectURI);
+        String redirectURI = FacebookUtils.prepareTokenRequest(application, code);
 
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(redirectURI);
+        return redirectView;
+    }
+
+    @RequestMapping(value = "api/token", method = RequestMethod.GET)
+    public RedirectView token(@RequestParam String appId, @RequestBody FacebookTokenResponse tokenResponse){
+
+        System.out.println(tokenResponse.toString());
+
+        Application application = repository.findOne(new ObjectId(appId));
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(application.getRedirectURI());
         return redirectView;
     }
 }
