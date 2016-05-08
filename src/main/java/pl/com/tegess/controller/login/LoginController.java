@@ -96,7 +96,7 @@ public class LoginController {
         FacebookValidateTokenResponse facebookValidateTokenResponse =
                 mapper.readValue(response.getBody(), FacebookValidateTokenResponse.class);
 
-        if(!facebookValidateTokenResponse.getData().getApp_id().equals(application.getAppId().toString())){
+        if(!facebookValidateTokenResponse.getData().getApp_id().equals(application.getFacebookAppId())){
             throw new Exception("Something went wrong!!!");
         }
         return facebookValidateTokenResponse;
