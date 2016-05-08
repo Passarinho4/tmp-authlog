@@ -28,8 +28,8 @@ public class FacebookUtils {
 
     public static String prepareApplicationTokenRequest(Application application) {
         return "/oauth/access_token?" +
-                "     client_id=" + application.getAppId() +
-                "    &amp;client_secret=" + application.getSecret() +
-                "    &amp;grant_type=client_credentials";
+                "client_id=" + application.getAppId() +
+                "&client_secret=" + application.getSecret() +
+                "&grant_type=client_credentials";
     }
 }
