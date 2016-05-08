@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 import pl.com.tegess.controller.user.request.UserData;
 import pl.com.tegess.domain.user.UserRepository;
 
@@ -27,4 +29,15 @@ public class UserReadController {
                 .collect(Collectors.toList());
 
     }
-}
+
+    @RequestMapping(value = "/api/login", method = RequestMethod.GET)
+    public RedirectView login(@RequestParam String appId, @RequestParam String type) {
+
+
+
+
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("http://google.com");
+        return redirectView;
+    }
+ }
