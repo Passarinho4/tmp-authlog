@@ -19,7 +19,7 @@ public class ApplicationWriteController {
     @Autowired
     ApplicationRepository repository;
 
-    @RequestMapping(value = "api/application", method = RequestMethod.POST)
+    @RequestMapping(value = "api/applications", method = RequestMethod.POST)
     public void createApplication(@RequestBody ApplicationData applicationData) {
 
         Application application = new Application(new ObjectId(),
