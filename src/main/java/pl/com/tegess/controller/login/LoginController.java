@@ -1,6 +1,7 @@
 package pl.com.tegess.controller.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,7 @@ import pl.com.tegess.domain.application.ApplicationRepository;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.Charset;
 
 @RestController
 @Component
@@ -90,6 +92,12 @@ public class LoginController {
         ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(requestURI), HttpMethod.GET);
 
         ClientHttpResponse response = request.execute();
+
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        String s = IOUtils.toString(response.getBody(), Charset.defaultCharset());
+        System.out.println(s);
+
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         FacebookValidateTokenResponse facebookValidateTokenResponse =
                 mapper.readValue(response.getBody(), FacebookValidateTokenResponse.class);
