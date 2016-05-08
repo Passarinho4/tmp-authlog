@@ -26,7 +26,7 @@ public class LoginController {
         RedirectView view = new RedirectView();
         view.setUrl("https://facebook.com/dialog/oauth?" +
                 "  client_id=" + application.getFacebookAppId() +
-                "  &redirect_uri=https://obieraki.tegess.com.pl");
+                "  &redirect_uri=http://51.255.48.55:8085/");
         return view;
     }
 }
