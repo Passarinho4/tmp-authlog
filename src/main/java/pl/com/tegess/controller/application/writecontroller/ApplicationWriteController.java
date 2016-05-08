@@ -23,7 +23,7 @@ public class ApplicationWriteController {
     public void createApplication(@RequestBody ApplicationData applicationData) {
 
         Application application = new Application(new ObjectId(),
-                applicationData.getFacebookAppId(), applicationData.getRedirectURI());
+                applicationData.getFacebookAppId(), applicationData.getFacebookRedirectURI());
 
         repository.insert(application);
     }

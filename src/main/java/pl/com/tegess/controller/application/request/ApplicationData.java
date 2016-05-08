@@ -4,16 +4,16 @@ public class ApplicationData {
 
     private String appId;
     private String facebookAppId;
-    private String redirectURI;
+    private String facebookRedirectURI;
 
     public ApplicationData() {
 
     }
 
-    public ApplicationData(String appId, String facebookAppId, String redirectURI) {
+    public ApplicationData(String appId, String facebookAppId, String facebookRedirectURI) {
         this.appId = appId;
         this.facebookAppId = facebookAppId;
-        this.redirectURI = redirectURI;
+        this.facebookRedirectURI = facebookRedirectURI;
     }
 
     public String getAppId() {
@@ -32,11 +32,11 @@ public class ApplicationData {
         this.facebookAppId = facebookAppId;
     }
 
-    public String getRedirectURI() {
-        return redirectURI;
+    public String getFacebookRedirectURI() {
+        return facebookRedirectURI;
     }
 
-    public void setRedirectURI(String redirectURI) {
-        this.redirectURI = redirectURI;
+    public void setFacebookRedirectURI(String facebookRedirectURI) {
+        this.facebookRedirectURI = facebookRedirectURI;
     }
 }
