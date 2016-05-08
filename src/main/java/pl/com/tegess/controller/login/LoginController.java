@@ -42,6 +42,8 @@ public class LoginController {
 
         String redirectURI = FacebookUtils.prepareTokenRequest(application, code);
 
+        System.out.println(redirectURI);
+
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl(redirectURI);
         return redirectView;
