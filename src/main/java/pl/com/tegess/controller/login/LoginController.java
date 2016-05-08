@@ -30,7 +30,9 @@ public class LoginController {
         RedirectView view = new RedirectView();
         view.setUrl("https://facebook.com/dialog/oauth?" +
                 "  client_id=" + application.getFacebookAppId() +
-                "  &redirect_uri=http://51.255.48.55:8085/api/logged?appId="+appId);
+                "  &redirect_uri=http://51.255.48.55:8085/api/logged?appId="+appId +
+                " &response_type=code%20token"
+        );
 
         return view;
     }
