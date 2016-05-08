@@ -31,8 +31,8 @@ public class FacebookUtils {
 
     public static String prepareApplicationTokenRequest(Application application) throws UnsupportedEncodingException {
         return "https://graph.facebook.com/v2.6/oauth/access_token?" +
-                URLEncoder.encode("client_id=" + application.getFacebookAppId() +
-                "&client_secret=" + application.getSecret() +
-                "&grant_type=client_credentials", "UTF-8");
+                "client_id=" + application.getFacebookAppId() +
+                "&client_secret=" + URLEncoder.encode(application.getSecret(), "UTF-8") +
+                "&grant_type=client_credentials";
     }
 }
