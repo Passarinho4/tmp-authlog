@@ -8,10 +8,12 @@ public class Application {
     @Id
     private final ObjectId appId;
     private final String facebookAppId;
+    private final String redirectURI;
 
-    public Application(ObjectId appId, String facebookAppId) {
+    public Application(ObjectId appId, String facebookAppId, String redirectURI) {
         this.appId = appId;
         this.facebookAppId = facebookAppId;
+        this.redirectURI = redirectURI;
     }
 
     public ObjectId getAppId() {
@@ -22,4 +24,7 @@ public class Application {
         return facebookAppId;
     }
 
+    public String getRedirectURI() {
+        return redirectURI;
+    }
 }

@@ -33,6 +33,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web:1.3.3.RELEASE'
     compile 'org.mongodb:mongo-java-driver:3.2.2'
     compile 'org.springframework.data:spring-data-mongodb:1.8.0.RELEASE'
+    compile 'commons-io:commons-io:2.5'
+
 
 }
 

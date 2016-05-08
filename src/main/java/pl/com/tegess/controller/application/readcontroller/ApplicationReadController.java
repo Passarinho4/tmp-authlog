@@ -22,7 +22,10 @@ public class ApplicationReadController {
     public List<ApplicationData> getApplications() {
         return repository.findAll()
                 .stream()
-                .map(application -> new ApplicationData(application.getAppId().toString(), application.getFacebookAppId()))
+                .map(application -> new ApplicationData(
+                        application.getAppId().toString(),
+                        application.getFacebookAppId(),
+                        application.getRedirectURI()))
                 .collect(Collectors.toList());
 
     }
