@@ -1,4 +1,4 @@
-package pl.com.tegess.controller.login;
+package pl.com.tegess.controller.login.request;
 
 public class FacebookTokenResponse {
 
