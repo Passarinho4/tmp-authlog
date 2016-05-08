@@ -60,7 +60,7 @@ public class LoginController {
         FacebookValidateTokenResponse facebookValidateTokenResponse =
                 getFacebookValidateTokenResponse(application, facebookTokenResponse, applicationToken);
 
-        System.out.println("User id = " + facebookValidateTokenResponse.getData().getUserId());
+        System.out.println("User id = " + facebookValidateTokenResponse.getData().getUser_id());
 
 
         RedirectView redirectView = new RedirectView();
@@ -93,16 +93,10 @@ public class LoginController {
 
         ClientHttpResponse response = request.execute();
 
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        String s = IOUtils.toString(response.getBody(), Charset.defaultCharset());
-        System.out.println(s);
-
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
         FacebookValidateTokenResponse facebookValidateTokenResponse =
                 mapper.readValue(response.getBody(), FacebookValidateTokenResponse.class);
 
-        if(!facebookValidateTokenResponse.getData().getAppId().equals(application.getAppId().toString())){
+        if(!facebookValidateTokenResponse.getData().getApp_id().equals(application.getAppId().toString())){
             throw new Exception("Something went wrong!!!");
         }
         return facebookValidateTokenResponse;
