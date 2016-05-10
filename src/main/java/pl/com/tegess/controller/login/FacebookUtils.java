@@ -12,7 +12,8 @@ public class FacebookUtils {
     public static String prepareCodeRequest(Application application) {
         return "https://facebook.com/dialog/oauth?" +
                 "client_id=" + application.getFacebookAppId() +
-                "&redirect_uri=http://51.255.48.55:8085/api/logged?appId="+application.getAppId();
+                "&redirect_uri=http://51.255.48.55:8085/api/logged?appId="+application.getAppId() +
+                "&scope=public_profile,email";
     }
 
     public static String prepareTokenRequest(Application application, String code) {
@@ -39,6 +40,6 @@ public class FacebookUtils {
 
     public static String prepareUserInfoRequest(String user_id) {
         return "https://graph.facebook.com/v2.6/"+user_id +
-                "?fields=id,name,email,gender";
+                "?fields=id,name,email,gender,locale,picture";
     }
 }
