@@ -36,4 +36,8 @@ public class FacebookUtils {
                 "input_token=" + tokenResponse.getAccess_token() +
                 "&access_token="+ URLEncoder.encode(applicationToken, "UTF-8");
     }
+
+    public static String prepareUserInfoRequest(String user_id) {
+        return "https://graph.facebook.com/v2.6/"+user_id;
+    }
 }

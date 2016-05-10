@@ -3,15 +3,20 @@ package pl.com.tegess.controller.login;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.com.tegess.controller.login.request.FacebookApplicationTokenResponse;
 import pl.com.tegess.controller.login.request.FacebookTokenResponse;
@@ -28,7 +33,7 @@ public class LoginController {
 
     @Autowired
     ApplicationRepository repository;
-    private SimpleClientHttpRequestFactory httpRequestFactory = new SimpleClientHttpRequestFactory();
+    private RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(value = "api/login", method = RequestMethod.GET)
     public RedirectView login(@RequestParam String appId, @RequestParam String type) {
@@ -60,6 +65,22 @@ public class LoginController {
 
         System.out.println("User id = " + facebookValidateTokenResponse.getData().getUser_id());
 
+        //Test connection
+        String userInfoRequestURI =
+                FacebookUtils.prepareUserInfoRequest(facebookValidateTokenResponse.getData().getUser_id());
+
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Bearer " + facebookTokenResponse.getAccess_token());
+        HttpEntity<Object> objectHttpEntity = new HttpEntity<>(httpHeaders);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(userInfoRequestURI, HttpMethod.GET, objectHttpEntity, String.class);
+
+        System.out.println("Response for user data request =" +responseEntity.getBody());
+
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.createRequest(URI.create(userInfoRequestURI), HttpMethod.GET);
+
+
 
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("http://google.com");
@@ -68,31 +89,20 @@ public class LoginController {
     }
 
     private String getFacebookApplicationToken(Application application) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
 
         String requestURI = FacebookUtils.prepareApplicationTokenRequest(application);
 
-        ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(requestURI), HttpMethod.GET);
-
-        ClientHttpResponse response = request.execute();
-
         FacebookApplicationTokenResponse facebookApplicationTokenResponse =
-                mapper.readValue(response.getBody(), FacebookApplicationTokenResponse.class);
+                restTemplate.getForObject(requestURI, FacebookApplicationTokenResponse.class);
 
         return facebookApplicationTokenResponse.getAccess_token();
     }
 
     private FacebookValidateTokenResponse getFacebookValidateTokenResponse(Application application, FacebookTokenResponse facebookTokenResponse, String applicationToken) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-
         String requestURI = FacebookUtils.prepareValidateTokenRequest(facebookTokenResponse, applicationToken);
 
-        ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(requestURI), HttpMethod.GET);
-
-        ClientHttpResponse response = request.execute();
-
         FacebookValidateTokenResponse facebookValidateTokenResponse =
-                mapper.readValue(response.getBody(), FacebookValidateTokenResponse.class);
+                restTemplate.getForObject(requestURI, FacebookValidateTokenResponse.class);
 
         if(!facebookValidateTokenResponse.getData().getApp_id().equals(application.getFacebookAppId())){
             throw new Exception("Something went wrong!!!");
@@ -101,13 +111,8 @@ public class LoginController {
     }
 
     private FacebookTokenResponse getFacebookTokenResponse(String code, Application application) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-
         String requestURI = FacebookUtils.prepareTokenRequest(application, code);
 
-        ClientHttpRequest request = httpRequestFactory.createRequest(URI.create(requestURI), HttpMethod.GET);
-        ClientHttpResponse response = request.execute();
-
-        return mapper.readValue(response.getBody(), FacebookTokenResponse.class);
+        return restTemplate.getForObject(requestURI, FacebookTokenResponse.class);
     }
 }
