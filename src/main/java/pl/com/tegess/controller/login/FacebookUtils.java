@@ -39,6 +39,6 @@ public class FacebookUtils {
 
     public static String prepareUserInfoRequest(String user_id) {
         return "https://graph.facebook.com/v2.6/"+user_id +
-                "fields=id,name,email,gender";
+                "?fields=id,name,email,gender";
     }
 }
