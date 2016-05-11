@@ -4,6 +4,9 @@ public class FacebookPicture {
 
     private FacebookPictureData data;
 
+    public FacebookPicture() {
+    }
+
     public FacebookPicture(FacebookPictureData data) {
         this.data = data;
     }

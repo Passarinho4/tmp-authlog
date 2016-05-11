@@ -9,6 +9,8 @@ public class FacebookUserData {
     private String locale;
     private FacebookPicture picture;
 
+    public FacebookUserData() {
+    }
 
     public FacebookUserData(String id, String name, String email, String gender, String locale, FacebookPicture picture) {
         this.id = id;

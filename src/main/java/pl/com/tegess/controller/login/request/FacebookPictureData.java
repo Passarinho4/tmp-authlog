@@ -5,6 +5,9 @@ public class FacebookPictureData {
     private boolean is_silhouette;
     private String url;
 
+    public FacebookPictureData() {
+    }
+
     public FacebookPictureData(boolean is_silhouette, String url) {
         this.is_silhouette = is_silhouette;
         this.url = url;
