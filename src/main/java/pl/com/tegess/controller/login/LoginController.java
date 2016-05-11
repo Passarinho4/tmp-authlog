@@ -1,16 +1,12 @@
 package pl.com.tegess.controller.login;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequest;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 import pl.com.tegess.controller.login.request.FacebookApplicationTokenResponse;
 import pl.com.tegess.controller.login.request.FacebookTokenResponse;
+import pl.com.tegess.controller.login.request.FacebookUserData;
 import pl.com.tegess.controller.login.request.FacebookValidateTokenResponse;
 import pl.com.tegess.domain.application.Application;
 import pl.com.tegess.domain.application.ApplicationRepository;
@@ -73,9 +70,10 @@ public class LoginController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + facebookTokenResponse.getAccess_token());
         HttpEntity<Object> objectHttpEntity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(userInfoRequestURI, HttpMethod.GET, objectHttpEntity, String.class);
+        ResponseEntity<FacebookUserData> responseEntity =
+                restTemplate.exchange(userInfoRequestURI, HttpMethod.GET, objectHttpEntity, FacebookUserData.class);
 
-        System.out.println("Response for user data request =" +responseEntity.getBody());
+        System.out.println(responseEntity.getBody());
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.createRequest(URI.create(userInfoRequestURI), HttpMethod.GET);
