@@ -9,13 +9,16 @@ import java.util.Optional;
 public class User {
 
     @Id
-    private final ObjectId id;
-    private final String username;
-    private final String password;
-    private final String pictureURL;
-    private final String mail;
-    private final String gender;
-    private final Locale locale;
+    private ObjectId id;
+    private String username;
+    private String password;
+    private String pictureURL;
+    private String mail;
+    private String gender;
+    private Locale locale;
+
+    public User() {
+    }
 
     public User(ObjectId id, String username, String pictureURL, String mail, String gender, Locale locale) {
         this.id = id;
@@ -69,5 +72,33 @@ public class User {
 
     public Locale getLocale() {
         return locale;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }
