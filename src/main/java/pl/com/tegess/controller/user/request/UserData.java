@@ -2,6 +2,7 @@ package pl.com.tegess.controller.user.request;
 
 public class UserData {
 
+    private String id;
     private String username;
     private String mail;
     private String pictureURL;
@@ -9,7 +10,8 @@ public class UserData {
     public UserData() {
     }
 
-    public UserData(String username, String mail, String pictureURL) {
+    public UserData(String id, String username, String mail, String pictureURL) {
+        this.id = id;
         this.username = username;
         this.mail = mail;
         this.pictureURL = pictureURL;
@@ -37,5 +39,13 @@ public class UserData {
 
     public void setPictureURL(String pictureURL) {
         this.pictureURL = pictureURL;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
