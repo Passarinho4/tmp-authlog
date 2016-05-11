@@ -20,9 +20,12 @@ import pl.com.tegess.controller.login.request.FacebookUserData;
 import pl.com.tegess.controller.login.request.FacebookValidateTokenResponse;
 import pl.com.tegess.domain.application.Application;
 import pl.com.tegess.domain.application.ApplicationRepository;
+import pl.com.tegess.domain.user.User;
+import pl.com.tegess.domain.user.UserRepository;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Locale;
 
 @RestController
 @Component
@@ -30,6 +33,9 @@ public class LoginController {
 
     @Autowired
     ApplicationRepository repository;
+    @Autowired
+    private UserRepository userRepository;
+
     private RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(value = "api/login", method = RequestMethod.GET)
@@ -62,18 +68,17 @@ public class LoginController {
 
         System.out.println("User id = " + facebookValidateTokenResponse.getData().getUser_id());
 
-        //Test connection
+        //Get user data
         String userInfoRequestURI =
                 FacebookUtils.prepareUserInfoRequest(facebookValidateTokenResponse.getData().getUser_id());
 
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Authorization", "Bearer " + facebookTokenResponse.getAccess_token());
-        HttpEntity<Object> objectHttpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Object> objectHttpEntity = FacebookUtils.prepareHeadersForFacebookAuthorization(facebookTokenResponse);
+
         ResponseEntity<FacebookUserData> responseEntity =
                 restTemplate.exchange(userInfoRequestURI, HttpMethod.GET, objectHttpEntity, FacebookUserData.class);
 
-        System.out.println(responseEntity.getBody());
+        createUser(responseEntity.getBody());
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.createRequest(URI.create(userInfoRequestURI), HttpMethod.GET);
@@ -84,6 +89,17 @@ public class LoginController {
         redirectView.setUrl("http://google.com");
 
         return redirectView;
+    }
+
+    private void createUser(FacebookUserData userData) {
+        User user = new User(new ObjectId(),
+                userData.getName(),
+                userData.getPicture().getData().getUrl(),
+                userData.getEmail(),
+                userData.getGender(),
+                new Locale(userData.getLocale()));
+
+        userRepository.insert(user);
     }
 
     private String getFacebookApplicationToken(Application application) throws IOException {

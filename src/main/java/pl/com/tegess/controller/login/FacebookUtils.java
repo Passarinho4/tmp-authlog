@@ -1,5 +1,8 @@
 package pl.com.tegess.controller.login;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import pl.com.tegess.controller.login.request.FacebookApplicationTokenResponse;
 import pl.com.tegess.controller.login.request.FacebookTokenResponse;
 import pl.com.tegess.domain.application.Application;
 
@@ -41,5 +44,12 @@ public class FacebookUtils {
     public static String prepareUserInfoRequest(String user_id) {
         return "https://graph.facebook.com/v2.6/"+user_id +
                 "?fields=id,name,email,gender,locale,picture";
+    }
+
+    public static HttpEntity<Object> prepareHeadersForFacebookAuthorization(FacebookTokenResponse facebookTokenResponse) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", "Bearer " + facebookTokenResponse.getAccess_token());
+        HttpEntity<Object> objectHttpEntity = new HttpEntity<>(httpHeaders);
+        return objectHttpEntity;
     }
 }

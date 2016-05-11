@@ -23,7 +23,7 @@ public class UserReadController {
 
         return repository.findAll()
                 .stream()
-                .map(user -> new UserData(user.getUsername(), user.getPassword()))
+                .map(user -> new UserData(user.getUsername(), user.getMail(), user.getPictureURL()))
                 .collect(Collectors.toList());
 
     }
