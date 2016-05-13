@@ -14,7 +14,6 @@ import java.util.Collections;
 @Configuration
 public class Config {
 
-
     @Bean
     public MongoClient mongoClient() {
         MongoCredential credential = MongoCredential.createCredential(
