@@ -1,6 +1,7 @@
 package pl.com.tegess.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter {
@@ -35,13 +37,20 @@ public class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException, ServletException {
 
-        String header = request.getHeader("Authorization");
-        String login = header.split(":")[0];
-        String password = header.split(":")[1].split(",")[0];
+        String header = Optional.ofNullable(request.getHeader("Authorization"))
+                .orElseThrow(() -> new AuthenticationCredentialsNotFoundException("Header Authorization not found"));
+        try {
+            String login = header.split(":")[0];
+            String password = header.split(":")[1].split(",")[0];
 
-        UsernamePasswordAuthenticationToken loginToken =
-                new UsernamePasswordAuthenticationToken(login, password);
-        return getAuthenticationManager().authenticate(loginToken);
+            UsernamePasswordAuthenticationToken loginToken =
+                    new UsernamePasswordAuthenticationToken(login, password);
+            return getAuthenticationManager().authenticate(loginToken);
+
+        }catch (IndexOutOfBoundsException e) {
+            throw new AuthenticationCredentialsNotFoundException("Wrong header format..");
+        }
+
     }
 
     @Override
