@@ -16,7 +16,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final String SECRET = "009d2dec-1d29-4870-b9fe-dfa6bf3a7e27";
+    private final String SECRET = "fe9c0838-963f-4c91-b133-bf56b1a8fb79";
 
     public SpringSecurityConfig() {
         super(true);
@@ -30,6 +30,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .servletApi().and()
                 .authorizeRequests()
                 .antMatchers("/").authenticated()
+                .antMatchers("/api/install").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(statelessLoginFilter(), UsernamePasswordAuthenticationFilter.class)

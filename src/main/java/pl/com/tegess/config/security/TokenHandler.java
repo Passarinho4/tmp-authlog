@@ -5,8 +5,8 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.codec.Base64;
 import pl.com.tegess.domain.admin.Admin;
 
 import java.util.Collection;
@@ -42,7 +42,8 @@ public class TokenHandler {
     public String createTokenForAdmin(String username, Collection<? extends GrantedAuthority> authorities) {
         JwtBuilder jwtBuilder = Jwts.builder()
                 .setSubject(username)
-                .signWith(SignatureAlgorithm.HS512, secret);
+                .signWith(SignatureAlgorithm.HS256, Base64.encode(secret.getBytes()))
+                .setHeaderParam("typ", "JWT");
 
         List<String> authoritiesAsString  = authorities.stream()
                     .map(GrantedAuthority::getAuthority).collect(Collectors.toList());

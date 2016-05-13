@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pl.com.tegess.config.Config;
 import pl.com.tegess.domain.admin.AdminRepository;
 
+import java.util.Optional;
+
 @Configuration
 @Import({Config.class})
 public class AdminService implements UserDetailsService {
@@ -18,6 +20,7 @@ public class AdminService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return adminRepository.findOne(username);
+        return Optional.ofNullable(adminRepository.findOne(username)).orElseThrow(
+                () -> new UsernameNotFoundException("This user doesn't exists!"));
     }
 }

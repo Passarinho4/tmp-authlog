@@ -18,7 +18,7 @@ public class AdminWriteController {
     @Autowired
     AdminRepository repository;
 
-    @RequestMapping(value = "/api/admins", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/install", method = RequestMethod.POST)
     public void create(@RequestBody AdminWriteData adminWriteData) {
         Admin admin = new Admin(adminWriteData.getUsername(), adminWriteData.getPassword());
         repository.insert(admin);
