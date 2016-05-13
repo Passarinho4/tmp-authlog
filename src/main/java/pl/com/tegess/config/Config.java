@@ -7,11 +7,13 @@ import com.mongodb.ServerAddress;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import javax.servlet.Filter;
 import java.util.Collections;
 
 @Configuration
+@EnableMongoRepositories({"pl.com.tegess"})
 public class Config {
 
     @Bean
