@@ -36,7 +36,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(statelessLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(statelessAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .logout().
-                logoutRequestMatcher(new AntPathRequestMatcher("/api/logout")).
+                logoutRequestMatcher(new AntPathRequestMatcher("/api/logoutAdmin")).
                 logoutSuccessHandler(new LogoutSuccessHandler("http://google.com")).and()
                 .headers().cacheControl();
 
