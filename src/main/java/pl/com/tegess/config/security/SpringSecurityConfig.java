@@ -31,7 +31,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/").authenticated()
                 .antMatchers("/api/install").permitAll()
-                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/loginAdmin").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(statelessLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(statelessAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -64,7 +64,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public StatelessLoginFilter statelessLoginFilter() throws Exception {
-        return new StatelessLoginFilter("/api/login", authenticationManager());
+        return new StatelessLoginFilter("/api/loginAdmin", authenticationManager());
     }
 
     @Bean

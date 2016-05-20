@@ -26,4 +26,9 @@ public class AdminReadController {
                 .map(admin -> new AdminReadData(admin.getUsername()))
                 .collect(Collectors.toList());
     }
+
+    @RequestMapping(value = "/api/loginAdmin", method = RequestMethod.GET)
+    public String loginAdmin() {
+        return "Admin logged";
+    }
 }
