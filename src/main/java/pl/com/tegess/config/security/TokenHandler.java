@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.codec.Base64;
 import pl.com.tegess.domain.admin.Admin;
 
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public class TokenHandler {
 
     public Admin parseUserFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(secret)
+                .setSigningKey(Base64.encode(secret.getBytes()))
                 .parseClaimsJws(token)
                 .getBody();
         UserDetails userDetails = adminService.loadUserByUsername(claims.get("username", String.class));

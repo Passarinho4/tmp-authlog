@@ -26,7 +26,6 @@ public class TokenAuthenticationService {
 
         response.addHeader("Access-Control-Expose-Headers", AUTH_HEADER_NAME);
         response.addHeader(AUTH_HEADER_NAME, tokenHandler.createTokenForAdmin(username, authorities));
-        response.setStatus(200);
     }
 
     public Authentication getAuthentication(HttpServletRequest request){
