@@ -14,11 +14,8 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
     // Just for setting the default target URL
     public LogoutSuccessHandler(String defaultTargetURL) {
-        this.setRedirectStrategy(new RedirectStrategy() {
-            @Override
-            public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
+        this.setRedirectStrategy((request, response, url) -> {
 
-            }
         });
     }
 
