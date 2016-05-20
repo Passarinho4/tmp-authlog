@@ -27,8 +27,8 @@ public class ApplicationWriteController {
         repository.insert(application);
     }
 
-    @RequestMapping(value = "api/applications/:id", method = RequestMethod.DELETE)
-    public void deleteApplication(@RequestParam String id) {
+    @RequestMapping(value = "api/applications/{id}", method = RequestMethod.DELETE)
+    public void deleteApplication(@PathVariable String id) {
         if(ObjectId.isValid(id)){
             repository.delete(new ObjectId(id));
         }else {
