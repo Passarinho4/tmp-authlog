@@ -28,7 +28,7 @@ public class AdminReadController {
     }
 
     @RequestMapping(value = "/api/loginAdmin", method = RequestMethod.GET)
-    public String loginAdmin() {
-        return "Admin logged";
+    public AdminReadData loginAdmin() {
+        return new AdminReadData("Szymek");
     }
 }
