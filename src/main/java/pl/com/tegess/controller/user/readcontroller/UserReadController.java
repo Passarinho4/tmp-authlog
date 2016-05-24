@@ -3,10 +3,7 @@ package pl.com.tegess.controller.user.readcontroller;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.com.tegess.controller.user.request.UserData;
 import pl.com.tegess.domain.user.UserRepository;
 
@@ -31,7 +28,7 @@ public class UserReadController {
     }
 
     @RequestMapping(value = "/api/applications/{appId}/users", method = RequestMethod.GET)
-    public List<UserData> getUserDataForApplication(@RequestParam String appId) {
+    public List<UserData> getUserDataForApplication(@PathVariable String appId) {
         return repository.findAll()
                 .stream()
                 .filter(user -> user.getAppId().equals(new ObjectId(appId)))
