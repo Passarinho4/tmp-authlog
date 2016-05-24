@@ -33,7 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/install").permitAll()
                 .antMatchers("/api/loginAdmin").permitAll()
                 .antMatchers("/api/login").permitAll()
-                .antMatchers("api/logged").permitAll()
+                .antMatchers("/api/logged").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(statelessLoginFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(statelessAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
