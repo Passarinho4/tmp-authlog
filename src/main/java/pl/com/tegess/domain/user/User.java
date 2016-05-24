@@ -16,18 +16,13 @@ public class User {
     private String mail;
     private String gender;
     private Locale locale;
+    private ObjectId appId;
 
     public User() {
     }
 
-    public User(ObjectId id, String username, String pictureURL, String mail, String gender, Locale locale) {
-        this.id = id;
-        this.username = username;
-        this.password = null;
-        this.pictureURL = pictureURL;
-        this.mail = mail;
-        this.gender = gender;
-        this.locale = locale;
+    public User(ObjectId id, String username, String pictureURL, String mail, String gender, Locale locale, ObjectId appId) {
+        this(id, username, null, pictureURL, mail, gender, locale, appId);
     }
 
     public User(ObjectId id,
@@ -36,7 +31,7 @@ public class User {
                 String pictureURL,
                 String mail,
                 String gender,
-                Locale locale) {
+                Locale locale, ObjectId appId) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -44,6 +39,7 @@ public class User {
         this.mail = mail;
         this.gender = gender;
         this.locale = locale;
+        this.appId = appId;
     }
 
     public ObjectId getId() {
@@ -100,5 +96,9 @@ public class User {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public ObjectId getAppId() {
+        return appId;
     }
 }

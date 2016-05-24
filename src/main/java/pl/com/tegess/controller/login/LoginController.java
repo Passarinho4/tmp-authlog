@@ -78,7 +78,7 @@ public class LoginController {
         ResponseEntity<FacebookUserData> responseEntity =
                 restTemplate.exchange(userInfoRequestURI, HttpMethod.GET, objectHttpEntity, FacebookUserData.class);
 
-        createUser(responseEntity.getBody());
+        createUser(appId, responseEntity.getBody());
 
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
         requestFactory.createRequest(URI.create(userInfoRequestURI), HttpMethod.GET);
@@ -91,13 +91,14 @@ public class LoginController {
         return redirectView;
     }
 
-    private void createUser(FacebookUserData userData) {
+    private void createUser(String appId, FacebookUserData userData) {
         User user = new User(new ObjectId(),
                 userData.getName(),
                 userData.getPicture().getData().getUrl(),
                 userData.getEmail(),
                 userData.getGender(),
-                new Locale(userData.getLocale()));
+                new Locale(userData.getLocale()),
+                new ObjectId(appId));
 
         userRepository.insert(user);
     }
