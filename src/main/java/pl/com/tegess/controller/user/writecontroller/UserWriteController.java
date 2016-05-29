@@ -4,7 +4,10 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import pl.com.tegess.domain.user.User;
 import pl.com.tegess.domain.user.UserRepository;
+
+import java.util.List;
 
 @RestController
 @Component
@@ -17,5 +20,19 @@ public class UserWriteController {
     @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable String id) {
         repository.delete(new ObjectId(id));
+    }
+
+    @RequestMapping(value = "/api/users/{id}/privileges", method = RequestMethod.POST)
+    public void addPrivilege(@PathVariable String id, @RequestBody List<String> privileges) {
+        User user = repository.findOne(new ObjectId(id));
+        privileges.forEach(user::addPrivilege);
+        repository.save(user);
+    }
+
+    @RequestMapping(value = "/api/users/{id}/privileges/{privilege}", method = RequestMethod.DELETE)
+    public void deletePrivilege(@PathVariable String id, @PathVariable String privilege) {
+        User user = repository.findOne(new ObjectId(id));
+        user.deletePrivilege(privilege);
+        repository.save(user);
     }
 }
