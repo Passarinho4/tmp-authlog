@@ -6,7 +6,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 import pl.com.tegess.controller.login.request.FacebookApplicationTokenResponse;
 import pl.com.tegess.controller.login.request.FacebookTokenResponse;
 import pl.com.tegess.controller.login.request.FacebookUserData;
@@ -25,6 +25,7 @@ import pl.com.tegess.domain.user.UserRepository;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Locale;
 
 @RestController
@@ -35,6 +36,8 @@ public class LoginController {
     ApplicationRepository repository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TokenManager tokenManager;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -78,20 +81,24 @@ public class LoginController {
         ResponseEntity<FacebookUserData> responseEntity =
                 restTemplate.exchange(userInfoRequestURI, HttpMethod.GET, objectHttpEntity, FacebookUserData.class);
 
-        createUser(appId, responseEntity.getBody());
+        //Create user and add it to db
+        User user = createUser(appId, responseEntity.getBody());
 
-        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.createRequest(URI.create(userInfoRequestURI), HttpMethod.GET);
+        //Generate JWTToken and redirect to Client App.
+        String token = tokenManager.generateJWTTokenForUser(user, application);
 
-
+        String url = UriComponentsBuilder.fromUriString(application.getRedirectURI())
+                .queryParam("token", token)
+                .build()
+                .toUriString();
 
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://google.com");
+        redirectView.setUrl(url);
 
         return redirectView;
     }
 
-    private void createUser(String appId, FacebookUserData userData) {
+    private User createUser(String appId, FacebookUserData userData) {
         User user = new User(new ObjectId(),
                 userData.getName(),
                 userData.getPicture().getData().getUrl(),
@@ -101,6 +108,8 @@ public class LoginController {
                 new ObjectId(appId));
 
         userRepository.insert(user);
+
+        return user;
     }
 
     private String getFacebookApplicationToken(Application application) throws IOException {
