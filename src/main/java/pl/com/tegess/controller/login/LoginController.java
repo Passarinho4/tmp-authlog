@@ -87,7 +87,7 @@ public class LoginController {
         //Generate JWTToken and redirect to Client App.
         String token = tokenManager.generateJWTTokenForUser(user, application);
 
-        String url = UriComponentsBuilder.fromUriString(application.getRedirectURI())
+        String url = UriComponentsBuilder.fromPath(application.getRedirectURI())
                 .queryParam("token", token)
                 .build()
                 .toUriString();
