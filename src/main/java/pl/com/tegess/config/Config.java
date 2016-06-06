@@ -21,7 +21,7 @@ public class Config {
     public MongoClient mongoClient() {
         MongoCredential credential = MongoCredential.createCredential(
                 "Passarinho", "admin", "Passarinho123".toCharArray());
-        ServerAddress serverAddress = new ServerAddress("51.255.48.55", 27019);
+        ServerAddress serverAddress = new ServerAddress("51.255.48.55", 27017);
         MongoClient mongoClient = new MongoClient(serverAddress, Collections.singletonList(credential));
         return mongoClient;
     }
