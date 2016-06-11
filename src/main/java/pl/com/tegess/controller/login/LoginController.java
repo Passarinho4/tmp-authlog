@@ -16,6 +16,7 @@ import pl.com.tegess.controller.login.facebook.FacebookUtils;
 import pl.com.tegess.controller.login.request.facebook.FacebookTokenResponse;
 import pl.com.tegess.controller.login.request.facebook.FacebookUserData;
 import pl.com.tegess.controller.login.request.facebook.FacebookValidateTokenResponse;
+import pl.com.tegess.controller.login.request.utils.TokenResponse;
 import pl.com.tegess.domain.application.Application;
 import pl.com.tegess.domain.application.ApplicationRepository;
 import pl.com.tegess.domain.user.User;
@@ -37,8 +38,8 @@ public class LoginController {
     private RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping(value = "api/login/credentials", method = RequestMethod.GET)
-    public RedirectView loginByCredentials(@RequestParam String appId,
-                                           @RequestHeader(value = "Authorization") String credentials) {
+    public TokenResponse loginByCredentials(@RequestParam String appId,
+                                            @RequestHeader(value = "Authorization") String credentials) {
 
         String decodedCredentials = new String(Base64Utils.decodeFromString(credentials));
         String[] slittedCredentials = decodedCredentials.split(":");
@@ -55,12 +56,7 @@ public class LoginController {
             Application application = repository.findOne(new ObjectId(appId));
             String token = tokenManager.generateJWTTokenForUser(user, application);
 
-            String url = application.getRedirectURI() + "?token=" + token;
-
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl(url);
-
-            return redirectView;
+            return new TokenResponse(token);
         }
         throw new IllegalArgumentException("Wrong password.");
     }
