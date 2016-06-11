@@ -1,7 +1,10 @@
 package pl.com.tegess.domain.user.service;
 
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import pl.com.tegess.controller.login.request.facebook.FacebookUserData;
 import pl.com.tegess.domain.user.User;
@@ -9,6 +12,7 @@ import pl.com.tegess.domain.user.UserRepository;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Component
 public class UserService {
@@ -37,6 +41,11 @@ public class UserService {
             throw new IllegalStateException("Too many users with the same username!");
         }
 
+    }
+
+    public Optional<User> findUserInApplication(String appId, String username) {
+        User user = userRepository.findByUsernameAndAppId(username, appId);
+        return Optional.ofNullable(user);
     }
 
 }
