@@ -1,4 +1,4 @@
-package pl.com.tegess.controller.login.request;
+package pl.com.tegess.controller.login.request.facebook;
 
 public class FacebookUserData {
 
