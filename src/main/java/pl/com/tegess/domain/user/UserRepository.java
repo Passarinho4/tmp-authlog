@@ -11,5 +11,5 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     List<User> findByUsername(String username);
 
     @Query(value = "{'username' : ?0, 'appId' : ?1}")
-    User findByUsernameAndAppId(String username, String appId);
+    User findByUsernameAndAppId(String username, ObjectId appId);
 }

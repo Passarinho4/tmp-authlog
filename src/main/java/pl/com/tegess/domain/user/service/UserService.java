@@ -44,7 +44,7 @@ public class UserService {
     }
 
     public Optional<User> findUserInApplication(String appId, String username) {
-        User user = userRepository.findByUsernameAndAppId(username, appId);
+        User user = userRepository.findByUsernameAndAppId(username, new ObjectId(appId));
         return Optional.ofNullable(user);
     }
 
