@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import pl.com.tegess.controller.user.request.NewUserRequest;
 import pl.com.tegess.domain.user.User;
 import pl.com.tegess.domain.user.UserRepository;
 
@@ -34,5 +35,16 @@ public class UserWriteController {
         User user = repository.findOne(new ObjectId(id));
         user.deletePrivilege(privilege);
         repository.save(user);
+    }
+
+    @RequestMapping(value = "/api/applications/{appId}/users", method = RequestMethod.POST)
+    public void addUser(@RequestBody NewUserRequest userRequest, @PathVariable String appId) {
+        User user = new User(new ObjectId(), userRequest.getUsername(), userRequest.getPassword(), new ObjectId(appId));
+        repository.save(user);
+    }
+
+    @RequestMapping(value = "/api/applications/{appId}/users/{userId}", method = RequestMethod.DELETE)
+    public void deleteUser(@PathVariable String appId, @PathVariable String userId) {
+        repository.delete(new ObjectId(userId));
     }
 }

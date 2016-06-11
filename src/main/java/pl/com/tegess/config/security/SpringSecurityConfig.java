@@ -33,6 +33,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/install").permitAll()
                 .antMatchers("/api/loginAdmin").permitAll()
                 .antMatchers("/api/login/facebook").permitAll()
+                .antMatchers("/api/login/credentials").permitAll()
                 .antMatchers("/api/logged/facebook").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(statelessLoginFilter(), UsernamePasswordAuthenticationFilter.class)
