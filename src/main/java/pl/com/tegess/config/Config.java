@@ -29,6 +29,7 @@ public class Config {
     @Bean
     public Morphia morphia() {
         Morphia morphia = new Morphia();
+        morphia.getMapper().getOptions().setStoreEmpties(true);
         morphia.mapPackage("pl.com.tegess.domain");
         return morphia;
     }
