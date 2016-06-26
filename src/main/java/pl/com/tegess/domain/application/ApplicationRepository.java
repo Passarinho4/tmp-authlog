@@ -16,7 +16,7 @@ public class ApplicationRepository extends BasicDAO<Application, ObjectId> {
     }
 
     public Application findOneById(ObjectId objectId) {
-        Query<Application> q = createQuery().field("id").equal(objectId);
+        Query<Application> q = createQuery().field("appId").equal(objectId);
         return findOne(q);
     }
 }
