@@ -40,4 +40,9 @@ public class LoginEvent {
     public ObjectId getAppId() {
         return appId;
     }
+
+    public LoginEvent setTime(Date time) {
+        this.time = time;
+        return this;
+    }
 }

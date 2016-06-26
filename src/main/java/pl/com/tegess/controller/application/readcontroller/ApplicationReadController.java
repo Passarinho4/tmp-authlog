@@ -1,7 +1,7 @@
 package pl.com.tegess.controller.application.readcontroller;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +41,10 @@ public class ApplicationReadController {
     public LoginNumber getLoginNumber(@PathVariable String appId, @RequestParam Long from, @RequestParam Long to) {
         return new LoginNumber(loginService.countLoginForAppInPeriod(new ObjectId(appId),
                 new Date(from), new Date(to)));
+    }
+
+    @RequestMapping(value = "/api/applications/{appId}/hourLoginStats", method = RequestMethod.GET)
+    public List<Pair<Date, Long>> getHourLoginStats(@PathVariable String appId) {
+        return loginService.getHourLoginStats(new ObjectId(appId));
     }
 }
