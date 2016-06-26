@@ -10,6 +10,7 @@ import pl.com.tegess.controller.application.request.LoginNumber;
 import pl.com.tegess.domain.application.ApplicationRepository;
 import pl.com.tegess.domain.events.LoginService;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,6 @@ public class ApplicationReadController {
     @RequestMapping(value = "/api/applications/{appId}/loginNumber", method = RequestMethod.GET)
     public LoginNumber getLoginNumber(@PathVariable String appId, @RequestParam Long from, @RequestParam Long to) {
         return new LoginNumber(loginService.countLoginForAppInPeriod(new ObjectId(appId),
-                new DateTime(from), new DateTime(to)));
+                new Date(from), new Date(to)));
     }
 }

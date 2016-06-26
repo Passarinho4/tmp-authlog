@@ -1,11 +1,12 @@
 package pl.com.tegess.domain.events;
 
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.com.tegess.domain.application.Application;
 import pl.com.tegess.domain.user.User;
+
+import java.util.Date;
 
 @Service
 public class LoginService {
@@ -17,7 +18,7 @@ public class LoginService {
         repository.save(event);
     }
 
-    public long countLoginForAppInPeriod(ObjectId appId, DateTime from, DateTime to) {
+    public long countLoginForAppInPeriod(ObjectId appId, Date from, Date to) {
         return repository.countLoginForAppInPeriod(appId, from, to);
     }
 

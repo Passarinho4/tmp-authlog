@@ -1,9 +1,10 @@
 package pl.com.tegess.domain.events;
 
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+
+import java.util.Date;
 
 @Entity
 public class LoginEvent {
@@ -12,7 +13,7 @@ public class LoginEvent {
     private ObjectId id;
     private ObjectId appId;
     private ObjectId userId;
-    private DateTime time;
+    private Date time;
 
     public LoginEvent(){
     }
@@ -21,7 +22,7 @@ public class LoginEvent {
         this.appId = appId;
         this.userId = userId;
         id = new ObjectId();
-        time = new DateTime();
+        time = new Date();
     }
 
     public ObjectId getId() {
@@ -32,7 +33,7 @@ public class LoginEvent {
         return userId;
     }
 
-    public DateTime getTime() {
+    public Date getTime() {
         return time;
     }
 
