@@ -18,6 +18,7 @@ import pl.com.tegess.controller.login.request.facebook.FacebookValidateTokenResp
 import pl.com.tegess.controller.login.request.utils.TokenResponse;
 import pl.com.tegess.domain.application.Application;
 import pl.com.tegess.domain.application.ApplicationRepository;
+import pl.com.tegess.domain.events.LoginService;
 import pl.com.tegess.domain.user.User;
 import pl.com.tegess.domain.user.service.UserService;
 
@@ -33,6 +34,8 @@ public class LoginController {
     private TokenManager tokenManager;
     @Autowired
     private FacebookLoginHelper facebookLoginHelper;
+    @Autowired
+    private LoginService loginService;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -103,6 +106,8 @@ public class LoginController {
 
         //Generate JWTToken and redirect to Client App.
         String token = tokenManager.generateJWTTokenForUser(user, application);
+
+        loginService.logLogin(application, user);
 
         String url = application.getRedirectURI() + "?token=" + token;
 

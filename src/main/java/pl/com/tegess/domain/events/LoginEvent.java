@@ -2,9 +2,13 @@ package pl.com.tegess.domain.events;
 
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
+@Entity
 public class LoginEvent {
 
+    @Id
     private ObjectId id;
     private ObjectId appId;
     private ObjectId userId;
