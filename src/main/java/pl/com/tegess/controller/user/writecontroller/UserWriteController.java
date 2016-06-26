@@ -20,19 +20,19 @@ public class UserWriteController {
 
     @RequestMapping(value = "/api/users/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable String id) {
-        repository.delete(new ObjectId(id));
+        repository.deleteById(new ObjectId(id));
     }
 
     @RequestMapping(value = "/api/users/{id}/privileges", method = RequestMethod.POST)
     public void addPrivilege(@PathVariable String id, @RequestBody List<String> privileges) {
-        User user = repository.findOne(new ObjectId(id));
+        User user = repository.findOneById(new ObjectId(id));
         privileges.forEach(user::addPrivilege);
         repository.save(user);
     }
 
     @RequestMapping(value = "/api/users/{id}/privileges/{privilege}", method = RequestMethod.DELETE)
     public void deletePrivilege(@PathVariable String id, @PathVariable String privilege) {
-        User user = repository.findOne(new ObjectId(id));
+        User user = repository.findOneById(new ObjectId(id));
         user.deletePrivilege(privilege);
         repository.save(user);
     }
@@ -45,6 +45,6 @@ public class UserWriteController {
 
     @RequestMapping(value = "/api/applications/{appId}/users/{userId}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable String appId, @PathVariable String userId) {
-        repository.delete(new ObjectId(userId));
+        repository.deleteById(new ObjectId(userId));
     }
 }

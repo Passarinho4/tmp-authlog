@@ -21,7 +21,7 @@ public class AdminReadController {
 
     @RequestMapping(value = "/api/admins", method = RequestMethod.GET)
     public List<AdminReadData> get() {
-        return repository.findAll()
+        return repository.find().asList()
                 .stream()
                 .map(admin -> new AdminReadData(admin.getUsername()))
                 .collect(Collectors.toList());

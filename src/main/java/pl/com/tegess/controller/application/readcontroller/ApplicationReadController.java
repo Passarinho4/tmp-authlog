@@ -20,7 +20,8 @@ public class ApplicationReadController {
 
     @RequestMapping(value = "/api/applications", method = RequestMethod.GET)
     public List<ApplicationData> getApplications() {
-        return repository.findAll()
+        return repository.find()
+                .asList()
                 .stream()
                 .map(application -> new ApplicationData(
                         application.getAppId().toString(),

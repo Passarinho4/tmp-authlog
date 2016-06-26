@@ -1,12 +1,14 @@
 package pl.com.tegess.domain.admin;
 
-import org.springframework.data.annotation.Id;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Entity
 public class Admin implements UserDetails {
 
     @Id

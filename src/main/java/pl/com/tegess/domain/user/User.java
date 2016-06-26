@@ -1,13 +1,15 @@
 package pl.com.tegess.domain.user;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+@Entity
 public class User {
 
     @Id

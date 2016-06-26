@@ -1,15 +1,22 @@
 package pl.com.tegess.domain.user;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public class UserRepository extends BasicDAO<User, ObjectId> {
 
-public interface UserRepository extends MongoRepository<User, ObjectId> {
+    @Autowired
+    protected UserRepository(Datastore ds) {
+        super(ds);
+    }
 
-    List<User> findByUsername(String username);
-
-    @Query(value = "{'username' : ?0, 'appId' : ?1}")
-    User findByUsernameAndAppId(String username, ObjectId appId);
+    public User findOneById(ObjectId objectId) {
+        Query<User> q = createQuery().field("id").equal(objectId);
+        return findOne(q);
+    }
 }

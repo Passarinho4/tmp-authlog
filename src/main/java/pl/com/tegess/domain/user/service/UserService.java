@@ -1,10 +1,8 @@
 package pl.com.tegess.domain.user.service;
 
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.ObjectFactory;
+import org.mongodb.morphia.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import pl.com.tegess.controller.login.request.facebook.FacebookUserData;
 import pl.com.tegess.domain.user.User;
@@ -22,7 +20,10 @@ public class UserService {
 
     public User createUser(String appId, FacebookUserData userData) {
 
-        List<User> users = userRepository.findByUsername(userData.getName());
+        List<User> users = userRepository.find(
+                userRepository.createQuery()
+                        .field("name").equal(userData.getName())
+        ).asList();
 
         if(users.size() == 0) {
             User user = new User(new ObjectId(),
@@ -33,7 +34,7 @@ public class UserService {
                     new Locale(userData.getLocale()),
                     new ObjectId(appId));
 
-            userRepository.insert(user);
+            userRepository.save(user);
             return user;
         }else if(users.size() == 1) {
             return users.get(0);
@@ -44,7 +45,12 @@ public class UserService {
     }
 
     public Optional<User> findUserInApplication(String appId, String username) {
-        User user = userRepository.findByUsernameAndAppId(username, new ObjectId(appId));
+        Query<User> query = userRepository.createQuery()
+                .field("username").equal(username)
+                .field("appId").equal(new ObjectId(appId));
+
+
+        User user = userRepository.findOne(query);
         return Optional.ofNullable(user);
     }
 

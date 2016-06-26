@@ -24,13 +24,13 @@ public class ApplicationWriteController {
                 applicationData.getFacebookAppId(), applicationData.getSecret(),
                 applicationData.getFacebookRedirectURI());
 
-        repository.insert(application);
+        repository.save(application);
     }
 
     @RequestMapping(value = "api/applications/{id}", method = RequestMethod.DELETE)
     public void deleteApplication(@PathVariable String id) {
         if(ObjectId.isValid(id)){
-            repository.delete(new ObjectId(id));
+            repository.deleteById(new ObjectId(id));
         }else {
             throw new IllegalArgumentException("Wrong id!");
         }

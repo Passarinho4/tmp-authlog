@@ -20,7 +20,8 @@ public class UserReadController {
     @RequestMapping(value = "/api/users", method = RequestMethod.GET)
     public List<UserData> getUsersData() {
 
-        return repository.findAll()
+        return repository.find()
+                .asList()
                 .stream()
                 .map(user -> new UserData(
                         user.getId().toString(),
@@ -34,7 +35,8 @@ public class UserReadController {
 
     @RequestMapping(value = "/api/applications/{appId}/users", method = RequestMethod.GET)
     public List<UserData> getUserDataForApplication(@PathVariable String appId) {
-        return repository.findAll()
+        return repository.find()
+                .asList()
                 .stream()
                 .filter(user -> user.getAppId().equals(new ObjectId(appId)))
                 .map(user -> new UserData(

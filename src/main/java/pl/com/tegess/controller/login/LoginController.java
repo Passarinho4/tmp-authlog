@@ -1,7 +1,6 @@
 package pl.com.tegess.controller.login;
 
 import org.bson.types.ObjectId;
-import org.eclipse.jetty.http.HttpHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -53,7 +52,7 @@ public class LoginController {
                 () -> new IllegalArgumentException("User can't be logged by credentials"));
 
         if(userPassword.equals(password)) {
-            Application application = repository.findOne(new ObjectId(appId));
+            Application application = repository.findOneById(new ObjectId(appId));
             String token = tokenManager.generateJWTTokenForUser(user, application);
 
             return new TokenResponse(token);
@@ -64,7 +63,7 @@ public class LoginController {
     @RequestMapping(value = "api/login/facebook", method = RequestMethod.GET)
     public RedirectView loginByFacebook(@RequestParam String appId) {
 
-        Application application = repository.findOne(new ObjectId(appId));
+        Application application = repository.findOneById(new ObjectId(appId));
 
         RedirectView view = new RedirectView();
         view.setUrl(FacebookUtils.prepareCodeRequest(application));
@@ -77,7 +76,7 @@ public class LoginController {
             @RequestParam String appId,
             @RequestParam String code) throws Exception {
 
-        Application application = repository.findOne(new ObjectId(appId));
+        Application application = repository.findOneById(new ObjectId(appId));
 
         //Firstly we need obtain token from FB.
         FacebookTokenResponse facebookTokenResponse = facebookLoginHelper.getFacebookTokenResponse(code, application);

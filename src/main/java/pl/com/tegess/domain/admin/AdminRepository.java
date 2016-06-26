@@ -1,10 +1,16 @@
 package pl.com.tegess.domain.admin;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public class AdminRepository extends BasicDAO<Admin, String> {
 
-public interface AdminRepository extends MongoRepository<Admin, String> {
-
+    @Autowired
+    protected AdminRepository(Datastore ds) {
+        super(ds);
+    }
 }
 

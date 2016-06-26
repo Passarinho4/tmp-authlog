@@ -1,7 +1,22 @@
 package pl.com.tegess.domain.application;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.dao.BasicDAO;
+import org.mongodb.morphia.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-public interface ApplicationRepository extends MongoRepository<Application, ObjectId> {
+@Repository
+public class ApplicationRepository extends BasicDAO<Application, ObjectId> {
+
+    @Autowired
+    protected ApplicationRepository(Datastore ds) {
+        super(ds);
+    }
+
+    public Application findOneById(ObjectId objectId) {
+        Query<Application> q = createQuery().field("id").equal(objectId);
+        return findOne(q);
+    }
 }

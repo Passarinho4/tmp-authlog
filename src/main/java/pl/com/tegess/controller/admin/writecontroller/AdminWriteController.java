@@ -21,6 +21,6 @@ public class AdminWriteController {
     @RequestMapping(value = "/api/install", method = RequestMethod.POST)
     public void create(@RequestBody AdminWriteData adminWriteData) {
         Admin admin = new Admin(adminWriteData.getUsername(), adminWriteData.getPassword());
-        repository.insert(admin);
+        repository.save(admin);
     }
 }

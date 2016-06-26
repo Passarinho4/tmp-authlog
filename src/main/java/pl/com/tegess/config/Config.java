@@ -4,17 +4,17 @@ package pl.com.tegess.config;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Morphia;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import pl.com.tegess.controller.login.facebook.FacebookLoginHelper;
 import pl.com.tegess.controller.login.TokenManager;
+import pl.com.tegess.controller.login.facebook.FacebookLoginHelper;
 import pl.com.tegess.domain.user.service.UserService;
 
 import java.util.Collections;
 
 @Configuration
-@EnableMongoRepositories({"pl.com.tegess"})
 public class Config {
 
     @Bean
@@ -24,6 +24,20 @@ public class Config {
         ServerAddress serverAddress = new ServerAddress("51.255.48.55", 27017);
         MongoClient mongoClient = new MongoClient(serverAddress, Collections.singletonList(credential));
         return mongoClient;
+    }
+
+    @Bean
+    public Morphia morphia() {
+        Morphia morphia = new Morphia();
+        morphia.mapPackage("pl.com.tegess.domain");
+        return morphia;
+    }
+
+    @Bean
+    public Datastore datastore() {
+        Datastore authlog = morphia().createDatastore(mongoClient(), "Authlog");
+        authlog.ensureIndexes();
+        return authlog;
     }
 
     @Bean
@@ -40,5 +54,4 @@ public class Config {
     public FacebookLoginHelper facebookLoginHelper() {
         return new FacebookLoginHelper();
     }
-
 }
