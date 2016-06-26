@@ -8,10 +8,13 @@ import org.mongodb.morphia.annotations.Id;
 public class Application {
 
     @Id
-    private final ObjectId appId;
-    private final String facebookAppId;
-    private final String secret;
-    private final String redirectURI;
+    private ObjectId appId;
+    private String facebookAppId;
+    private String secret;
+    private String redirectURI;
+
+    public Application() {
+    }
 
     public Application(ObjectId appId, String facebookAppId, String secret, String redirectURI) {
         this.appId = appId;
