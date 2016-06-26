@@ -22,7 +22,7 @@ public class UserService {
 
         List<User> users = userRepository.find(
                 userRepository.createQuery()
-                        .field("name").equal(userData.getName())
+                        .field("username").equal(userData.getName())
         ).asList();
 
         if(users.size() == 0) {
