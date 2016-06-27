@@ -58,6 +58,8 @@ public class LoginController {
             Application application = repository.findOneById(new ObjectId(appId));
             String token = tokenManager.generateJWTTokenForUser(user, application);
 
+            loginService.logLogin(application, user);
+
             return new TokenResponse(token);
         }
         throw new IllegalArgumentException("Wrong password.");
