@@ -17,17 +17,23 @@ public class LoginEventRepository extends BasicDAO<LoginEvent, ObjectId> {
         super(ds);
     }
 
-    public long countLoginForAppInPeriod(ObjectId appId, Date from, Date to){
+    long countLoginForAppInPeriod(ObjectId appId, Date from, Date to){
         return createQuery().field("appId").equal(appId)
                 .field("time").greaterThanOrEq(from)
                 .field("time").lessThan(to)
                 .countAll();
     }
 
-    public List<LoginEvent> getAllForAppInPeriod(ObjectId appId, Date from, Date to) {
+    List<LoginEvent> getAllForAppInPeriod(ObjectId appId, Date from, Date to) {
         return createQuery().field("appId").equal(appId)
                 .field("time").greaterThanOrEq(from)
                 .field("time").lessThan(to)
                 .asList();
     }
+
+    long countLoginForAppInTime(ObjectId appId, Date time) {
+        return createQuery().field("appId").equal(appId)
+                .field("time").equal(time).countAll();
+    }
+
 }

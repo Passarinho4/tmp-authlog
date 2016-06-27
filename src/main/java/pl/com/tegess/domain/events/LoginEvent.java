@@ -3,6 +3,7 @@ package pl.com.tegess.domain.events;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
 
 import java.util.Date;
 
@@ -11,8 +12,10 @@ public class LoginEvent {
 
     @Id
     private ObjectId id;
+    @Indexed
     private ObjectId appId;
     private ObjectId userId;
+    @Indexed
     private Date time;
 
     public LoginEvent(){

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import pl.com.tegess.controller.application.request.ApplicationData;
 import pl.com.tegess.controller.application.request.LoginNumber;
+import pl.com.tegess.controller.application.request.MinuteStats;
 import pl.com.tegess.domain.application.ApplicationRepository;
 import pl.com.tegess.domain.events.LoginService;
 
@@ -44,7 +45,9 @@ public class ApplicationReadController {
     }
 
     @RequestMapping(value = "/api/applications/{appId}/hourLoginStats", method = RequestMethod.GET)
-    public List<Pair<Date, Long>> getHourLoginStats(@PathVariable String appId) {
-        return loginService.getHourLoginStats(new ObjectId(appId));
+    public List<MinuteStats> getHourLoginStats(@PathVariable String appId) {
+        return loginService.getHourLoginStats(new ObjectId(appId)).stream()
+                .map(pair -> new MinuteStats(pair.getKey(), pair.getValue()))
+                .collect(Collectors.toList());
     }
 }
