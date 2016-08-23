@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class EmbeddedJetty {
 
     public static void main(String[] args) {
+
         SpringApplication.run(EmbeddedJetty.class, args);
     }
 
