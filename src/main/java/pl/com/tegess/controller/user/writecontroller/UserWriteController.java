@@ -39,7 +39,12 @@ public class UserWriteController {
 
     @RequestMapping(value = "/api/applications/{appId}/users", method = RequestMethod.POST)
     public void addUser(@RequestBody NewUserRequest userRequest, @PathVariable String appId) {
-        User user = new User(new ObjectId(), userRequest.getUsername(), userRequest.getPassword(), new ObjectId(appId));
+        User user = new User(new ObjectId(),
+                userRequest.getUsername(),
+                userRequest.getPassword(),
+                userRequest.getPicture(),
+                userRequest.getMail(),
+                new ObjectId(appId));
         repository.save(user);
     }
 

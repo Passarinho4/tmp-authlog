@@ -26,8 +26,13 @@ public class User {
     public User() {
     }
 
-    public User(ObjectId id, String username, String password, ObjectId appId) {
-        this(id, username, password, null, null, null, null, appId, new ArrayList<>());
+    public User(ObjectId id,
+                String username,
+                String password,
+                String pictureURL,
+                String mail,
+                ObjectId appId) {
+        this(id, username, password, pictureURL, mail, null, null, appId, new ArrayList<>());
     }
 
     public User(ObjectId id, String username, String pictureURL, String mail, String gender, Locale locale, ObjectId appId) {
