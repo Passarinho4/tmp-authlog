@@ -25,8 +25,7 @@ class LoginController {
 
   @Autowired var applicationService: ApplicationService = _
   @Autowired var userService: UserService = _
-
-  val restTemplate = new RestTemplate()
+  @Autowired var restTemplate: RestTemplate = _
 
   @RequestMapping(value = Array("api/login/credentials"), method = Array(RequestMethod.GET))
   def loginByCredentials(@RequestParam appId: String, @RequestHeader(value = "Authorization") credentials: String): TokenResponse = {
