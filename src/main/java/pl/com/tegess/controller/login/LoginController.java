@@ -76,7 +76,7 @@ public class LoginController {
         return view;
     }
 
-    @RequestMapping(value = "api/logged/facebook", method = RequestMethod.GET)
+    @RequestMapping(value = "c", method = RequestMethod.GET)
     public RedirectView loggedByFacebook(
             @RequestParam String appId,
             @RequestParam String code) throws Exception {

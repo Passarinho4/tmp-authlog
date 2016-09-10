@@ -48,7 +48,6 @@ public class FacebookUtils {
     public static HttpEntity<Object> prepareHeadersForFacebookAuthorization(FacebookTokenResponse facebookTokenResponse) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + facebookTokenResponse.getAccess_token());
-        HttpEntity<Object> objectHttpEntity = new HttpEntity<>(httpHeaders);
-        return objectHttpEntity;
+        return new HttpEntity<>(httpHeaders);
     }
 }
