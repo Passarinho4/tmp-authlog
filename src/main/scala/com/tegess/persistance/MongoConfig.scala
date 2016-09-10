@@ -7,12 +7,15 @@ import com.mongodb.client.MongoDatabase
 import com.mongodb.{MongoClient, MongoCredential, ServerAddress}
 import com.tegess.domain.admin.Admin
 import com.tegess.domain.application.Application
+import com.tegess.domain.event.LoginEvent
 import com.tegess.domain.user.User
 import com.tegess.persistance.repository.admin.AdminRepository
 import com.tegess.persistance.repository.application.ApplicationRepository
+import com.tegess.persistance.repository.event.LoginEventRepository
 import com.tegess.persistance.repository.user.UserRepository
 import com.tegess.persistance.service.admin.AdminService
 import com.tegess.persistance.service.application.ApplicationService
+import com.tegess.persistance.service.event.LoginEventService
 import com.tegess.persistance.service.user.UserService
 import org.springframework.context.annotation.{Bean, Configuration}
 
@@ -47,6 +50,13 @@ class MongoConfig {
     val userCollection = new DBOps(db).getCollection[User]("User", UserRepository.codec)
     val userRepository = new UserRepository(userCollection)
     new UserService(userRepository)
+  }
+
+  @Bean
+  def loginEventService: LoginEventService = {
+    val loginEventCollection = new DBOps(db).getCollection[LoginEvent]("LoginEvent", LoginEventRepository.codec)
+    val loginEventRepository = new LoginEventRepository(loginEventCollection)
+    new LoginEventService(loginEventRepository)
   }
 
 }

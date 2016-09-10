@@ -41,6 +41,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.avsystem.commons:commons-mongo_2.11:1.16.3'
     compile 'com.avsystem.commons:commons-core_2.11:1.16.3'
+    compile 'joda-time:joda-time:2.9.4'
 
 }
 

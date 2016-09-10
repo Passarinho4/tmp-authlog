@@ -17,6 +17,7 @@ import scala.util.{Failure, Success, Try}
 import com.avsystem.commons._
 import com.tegess.controller.login.FacebookHelper.{FacebookApplicationTokenResponse, FacebookTokenResponse, FacebookUserData, FacebookValidateTokenResponse}
 import com.tegess.domain.user.{FacebookLogin, User}
+import com.tegess.persistance.service.event.LoginEventService
 import org.springframework.http.HttpMethod
 
 @RestController
@@ -25,6 +26,7 @@ class LoginController {
 
   @Autowired var applicationService: ApplicationService = _
   @Autowired var userService: UserService = _
+  @Autowired var loginEventService: LoginEventService = _
   @Autowired var restTemplate: RestTemplate = _
 
   @RequestMapping(value = Array("api/login/credentials"), method = Array(RequestMethod.GET))
@@ -37,7 +39,10 @@ class LoginController {
       if password == loginPassword.password
       application <- Try(applicationService.findOne(applicationId).get)
       token = TokenGenerator.generateJWTTokenForUser(application, user)
-    } yield TokenResponse(token)
+    } yield {
+      loginEventService.publishLoginEvent(application, user)
+      TokenResponse(token)
+    }
 
     result match {
       case Success(token) => token
@@ -85,6 +90,7 @@ class LoginController {
       url <- Try(application.redirectURL.get + s"?token=$token")
     } yield {
       userService.save(user)
+      loginEventService.publishLoginEvent(application, user)
       new RedirectView().setup(_.setUrl(url))
     }
 
