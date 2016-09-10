@@ -83,7 +83,10 @@ class LoginController {
         Some(userData.picture.data.url), Some(userData.gender), Some(new Locale(userData.locale)), List()))
       token <- Try(TokenGenerator.generateJWTTokenForUser(application, user))
       url <- Try(application.redirectURL.get + s"?token=$token")
-    } yield new RedirectView().setup(_.setUrl(url))
+    } yield {
+      userService.save(user)
+      new RedirectView().setup(_.setUrl(url))
+    }
 
     result match {
       case Success(r) => r
