@@ -1,0 +1,62 @@
+package com.tegess.persistance
+
+import java.util.Collections
+
+import com.avsystem.commons.mongo.MongoOps.DBOps
+import com.mongodb.client.MongoDatabase
+import com.mongodb.{MongoClient, MongoCredential, ServerAddress}
+import com.tegess.domain.admin.Admin
+import com.tegess.domain.application.Application
+import com.tegess.domain.event.LoginEvent
+import com.tegess.domain.user.User
+import com.tegess.persistance.repository.admin.AdminRepository
+import com.tegess.persistance.repository.application.ApplicationRepository
+import com.tegess.persistance.repository.event.LoginEventRepository
+import com.tegess.persistance.repository.user.UserRepository
+import com.tegess.persistance.service.admin.AdminService
+import com.tegess.persistance.service.application.ApplicationService
+import com.tegess.persistance.service.event.LoginEventService
+import com.tegess.persistance.service.user.UserService
+import org.springframework.context.annotation.{Bean, Configuration}
+
+@Configuration
+class MongoConfig {
+
+  @Bean def mongoClient: MongoClient = {
+    val credential: MongoCredential = MongoCredential.createCredential("Passarinho", "admin", "Passarinho123".toCharArray)
+    val serverAddress: ServerAddress = new ServerAddress("51.255.48.55", 27017)
+    new MongoClient(serverAddress, Collections.singletonList(credential))
+  }
+
+  @Bean
+  def db:MongoDatabase = mongoClient.getDatabase("Authlog")
+
+  @Bean
+  def adminService:AdminService = {
+    val adminCollection = new DBOps(db).getCollection[Admin]("Admin", AdminRepository.codec)
+    val adminRepository = new AdminRepository(adminCollection)
+    new AdminService(adminRepository)
+  }
+
+  @Bean
+  def applicationService: ApplicationService = {
+    val applicationCollection = new DBOps(db).getCollection[Application]("Application", ApplicationRepository.codec)
+    val applicationRepository = new ApplicationRepository(applicationCollection)
+    new ApplicationService(applicationRepository)
+  }
+
+  @Bean
+  def userService: UserService = {
+    val userCollection = new DBOps(db).getCollection[User]("User", UserRepository.codec)
+    val userRepository = new UserRepository(userCollection)
+    new UserService(userRepository)
+  }
+
+  @Bean
+  def loginEventService: LoginEventService = {
+    val loginEventCollection = new DBOps(db).getCollection[LoginEvent]("LoginEvent", LoginEventRepository.codec)
+    val loginEventRepository = new LoginEventRepository(loginEventCollection)
+    new LoginEventService(loginEventRepository)
+  }
+
+}

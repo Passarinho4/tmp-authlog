@@ -1,4 +1,4 @@
-group 'pl.com.tegess'
+group 'com.tegess'
 version '1.0-SNAPSHOT'
 
 
@@ -15,6 +15,7 @@ apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'spring-boot'
+apply plugin: 'scala'
 
 repositories {
     mavenCentral()
@@ -22,25 +23,28 @@ repositories {
 
 sourceCompatibility = 1.8
 
-mainClassName = "pl.com.tegess.EmbeddedJetty"
+mainClassName = "com.tegess.EmbeddedJetty"
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.springframework.boot:spring-boot-starter-jetty:1.3.3.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-web:1.3.3.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter-security:1.3.3.RELEASE'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.3'
-    compile 'org.mongodb:mongo-java-driver:3.2.2'
-    compile 'org.mongodb.morphia:morphia:1.2.0'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.2'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.2'
+    compile 'com.fasterxml.jackson.module:jackson-module-scala_2.11:2.8.2'
+    compile 'org.mongodb:mongodb-driver:3.2.2'
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.httpcomponents:httpclient:4.5.2'
     compile 'io.jsonwebtoken:jjwt:0.6.0'
     compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'com.avsystem.commons:commons-mongo_2.11:1.16.3'
+    compile 'com.avsystem.commons:commons-core_2.11:1.16.3'
+    compile 'joda-time:joda-time:2.9.4'
 
 }
 
 bootRepackage {
-    mainClass = 'pl.com.tegess.EmbeddedJetty'
+    mainClass = 'com.tegess.EmbeddedJetty'
 }
