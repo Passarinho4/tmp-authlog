@@ -1,9 +1,7 @@
 package com.tegess.controller.user
 
-import javax.websocket.server.PathParam
-
 import com.tegess.controller.user.UserWriteController.NewUserRequest
-import com.tegess.domain.user.{CredentialsLogin, FacebookLogin, LoginType, User}
+import com.tegess.domain.user.{CredentialsLogin, FacebookLogin, User}
 import com.tegess.persistance.service.user.UserService
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +23,7 @@ class UserWriteController {
       List(FacebookLogin, CredentialsLogin),
       Option(newUser.password),
       Option(newUser.mail),
-      Option(newUser.picture),
+      newUser.picture,
       None,
       None,
       List())
@@ -56,5 +54,5 @@ class UserWriteController {
 
 }
 object UserWriteController {
-  case class NewUserRequest(username: String, password: String, mail: String, picture: String)
+  case class NewUserRequest(username: String, password: String, mail: String, picture: Option[String])
 }
