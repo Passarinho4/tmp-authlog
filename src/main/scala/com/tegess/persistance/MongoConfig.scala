@@ -8,11 +8,11 @@ import com.mongodb.{MongoClient, MongoCredential, ServerAddress}
 import com.tegess.domain.admin.Admin
 import com.tegess.domain.application.Application
 import com.tegess.domain.event.LoginEvent
-import com.tegess.domain.user.User
+import com.tegess.domain.user.{User, UserPhoto}
 import com.tegess.persistance.repository.admin.AdminRepository
 import com.tegess.persistance.repository.application.ApplicationRepository
 import com.tegess.persistance.repository.event.LoginEventRepository
-import com.tegess.persistance.repository.user.UserRepository
+import com.tegess.persistance.repository.user.{UserPhotoRepository, UserRepository}
 import com.tegess.persistance.service.admin.AdminService
 import com.tegess.persistance.service.application.ApplicationService
 import com.tegess.persistance.service.event.LoginEventService
@@ -49,7 +49,9 @@ class MongoConfig {
   def userService: UserService = {
     val userCollection = new DBOps(db).getCollection[User]("User", UserRepository.codec)
     val userRepository = new UserRepository(userCollection)
-    new UserService(userRepository)
+    val userPhotoCollection = new DBOps(db).getCollection[UserPhoto]("UserPhoto", UserPhotoRepository.codec)
+    val userPhotoRepository = new UserPhotoRepository(userPhotoCollection)
+    new UserService(userRepository, userPhotoRepository)
   }
 
   @Bean

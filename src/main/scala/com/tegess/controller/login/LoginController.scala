@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView
 
 import scala.util.{Failure, Success, Try}
 import com.avsystem.commons._
+import com.tegess.controller._
 import com.tegess.controller.login.FacebookHelper.{FacebookApplicationTokenResponse, FacebookTokenResponse, FacebookUserData, FacebookValidateTokenResponse}
 import com.tegess.domain.user.{FacebookLogin, User}
 import com.tegess.persistance.service.event.LoginEventService
@@ -115,7 +116,4 @@ object LoginController {
     } yield LoginPassword(login, password)
   }
 
-  implicit class OptToTry[T](val option:Option[T]) {
-    def toTry:Try[T] = Try(option.get)
-  }
 }
