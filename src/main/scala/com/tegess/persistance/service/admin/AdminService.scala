@@ -2,26 +2,28 @@ package com.tegess.persistance.service.admin
 
 import com.tegess.domain.admin.Admin
 import com.tegess.persistance.MongoConfig
-import com.tegess.persistance.repository.admin.AdminRepository
+import com.tegess.persistance.service.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.{Configuration, Import}
-import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService, UsernameNotFoundException}
+import org.springframework.security.core.userdetails.{UserDetails, UserDetailsService}
+
+import scala.util.{Failure, Success, Try}
 
 @Configuration
 @Import(Array(classOf[MongoConfig]))
-class AdminService @Autowired() (repository: AdminRepository) extends UserDetailsService {
-  def save(admin: Admin) = repository.save(admin)
-  def find(username: String):Option[Admin] = Option(repository.findOne(username))
-  def findAll(): List[Admin] = repository.findAll()
-  def remove(username: String) = repository.remove(username)
-  def remove(admin: Admin) = repository.remove(admin.getUsername)
+class AdminService @Autowired() (userService: UserService) extends UserDetailsService {
 
   override def loadUserByUsername(username: String): UserDetails = {
-    val adminOpt: Option[Admin] = find(username)
-    if(adminOpt.isDefined) {
-      adminOpt.get
-    } else {
-      throw new UsernameNotFoundException(s"User not found! - username = $username")
+
+    val result = for {
+      applicationId <- Try(Admin.getApplicationIdFromUsername(username))
+      realUsername <- Try(Admin.getRealUsernameFromUsername(username))
+      user <- Try(userService.findOne(applicationId, realUsername).get)
+    } yield Admin(user)
+
+    result match {
+      case Success(admin) => admin
+      case Failure(e) => throw e
     }
   }
 }

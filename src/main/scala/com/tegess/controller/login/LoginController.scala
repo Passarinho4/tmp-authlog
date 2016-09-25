@@ -20,6 +20,7 @@ import com.tegess.controller.login.FacebookHelper.{FacebookApplicationTokenRespo
 import com.tegess.domain.user.{FacebookLogin, User}
 import com.tegess.persistance.service.event.LoginEventService
 import org.springframework.http.HttpMethod
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @RestController
 @Component
@@ -37,7 +38,7 @@ class LoginController {
       applicationId <- Try(new ObjectId(appId))
       user <- Try(userService.findOne(applicationId, loginPassword.login).get)
       password <- Try(user.password.get)
-      if password == loginPassword.password
+      if new BCryptPasswordEncoder().matches(loginPassword.password, password)
       application <- Try(applicationService.findOne(applicationId).get)
       token = TokenGenerator.generateJWTTokenForUser(application, user)
     } yield {

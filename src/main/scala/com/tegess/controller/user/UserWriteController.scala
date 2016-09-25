@@ -10,6 +10,8 @@ import com.tegess.persistance.service.user.UserService
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.{MediaType, ResponseEntity}
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.util.MimeType
 import org.springframework.web.bind.annotation._
@@ -31,7 +33,7 @@ class UserWriteController {
     val user = User(newUser.username,
       appId,
       List(FacebookLogin, CredentialsLogin),
-      Option(newUser.password),
+      Option(new BCryptPasswordEncoder().encode(newUser.password)),
       Option(newUser.mail),
       newUser.picture,
       None,
@@ -62,6 +64,7 @@ class UserWriteController {
     userService.save(updatedUser)
   }
 
+  @PreAuthorize(value = "authentication.getName() == #id.concat(#userId)")
   @RequestMapping(value=Array("/api/applications/{id}/users/{userId}/photo"), method=Array(RequestMethod.POST))
   def uploadAndSetUserPhoto(@RequestBody file: MultipartFile,
                             @PathVariable id: String,

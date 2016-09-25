@@ -22,13 +22,18 @@ class UserReadController {
 
     for {
       user <- users
-      mail = user.mail.getOrElse("")
-      pictureUrl = user.pictureUrl.getOrElse("")
-    } yield UserData(user.username, user.username, mail, pictureUrl, user.privileges)
+    } yield UserData(user.username, user.username, user.mail, user.pictureUrl,
+      user.gender, user.locale.map(_.toLanguageTag), user.privileges)
 
   }
 
 }
 object UserReadController {
-  case class UserData(id: String, username: String, mail: String, pictureURL: String, privileges: List[String])
+  case class UserData(id: String,
+                      username: String,
+                      mail: Option[String],
+                      pictureURL: Option[String],
+                      gender: Option[String],
+                      locale: Option[String],
+                      privileges: List[String])
 }

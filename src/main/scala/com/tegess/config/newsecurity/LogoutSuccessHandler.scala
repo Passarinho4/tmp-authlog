@@ -1,4 +1,4 @@
-package com.tegess.config.security
+package com.tegess.config.newsecurity
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 

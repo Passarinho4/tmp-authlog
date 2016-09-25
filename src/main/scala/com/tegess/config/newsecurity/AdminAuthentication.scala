@@ -1,8 +1,8 @@
-package com.tegess.config.security
+package com.tegess.config.newsecurity
 
-import org.springframework.security.core.{Authentication, GrantedAuthority}
 import com.avsystem.commons.jiop.JavaInterop._
 import com.tegess.domain.admin.Admin
+import org.springframework.security.core.{Authentication, GrantedAuthority}
 
 class AdminAuthentication(val admin: Admin) extends Authentication {
   private var authenticated: Boolean = true
