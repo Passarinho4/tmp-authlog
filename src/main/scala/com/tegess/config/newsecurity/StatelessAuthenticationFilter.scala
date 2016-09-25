@@ -1,4 +1,4 @@
-package com.tegess.config.security
+package com.tegess.config.newsecurity
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.{FilterChain, ServletRequest, ServletResponse}
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.GenericFilterBean
 
 @Component class StatelessAuthenticationFilter extends GenericFilterBean {
-  @Autowired private val authenticationService: TokenAuthenticationService = null
+  @Autowired private val authenticationService: TokenService = null
 
   def doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
     val httpRequest: HttpServletRequest = request.asInstanceOf[HttpServletRequest]

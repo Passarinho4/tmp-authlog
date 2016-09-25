@@ -1,7 +1,8 @@
-package com.tegess.config.security
+package com.tegess.config.newsecurity
 
 import com.tegess.persistance.MongoConfig
 import com.tegess.persistance.service.admin.AdminService
+import com.tegess.persistance.service.application.ApplicationService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.{Bean, Configuration, Import}
 import org.springframework.http.HttpMethod
@@ -22,6 +23,9 @@ class SecurityConfig extends WebSecurityConfigurerAdapter(true) {
 
   @Autowired
   var adminService:AdminService = _
+  @Autowired
+  var applicationService: ApplicationService = _
+
 
   override def configure(http: HttpSecurity) {
     http
@@ -31,12 +35,14 @@ class SecurityConfig extends WebSecurityConfigurerAdapter(true) {
       .authorizeRequests
       .antMatchers("/").authenticated
       .antMatchers("/api/test2").permitAll()
-      .antMatchers("/api/loginAdmin").permitAll
+      .antMatchers("/api/application/{appId}/login").permitAll
       .antMatchers("/api/login/facebook").permitAll
       .antMatchers("/api/login/credentials").permitAll
       .antMatchers("/api/logged/facebook").permitAll
       .antMatchers(HttpMethod.POST, "/api/applications/*/users").permitAll
       .antMatchers(HttpMethod.POST, "/api/install").permitAll
+      .antMatchers(HttpMethod.GET, "/api/applications/*/users/*/photo/*").permitAll
+      .antMatchers(HttpMethod.OPTIONS, "/api/applications/*/users/*/photo/*").permitAll
       .anyRequest.authenticated.and
       .addFilterBefore(statelessLoginFilter, classOf[UsernamePasswordAuthenticationFilter])
       .addFilterBefore(statelessAuthenticationFilter, classOf[UsernamePasswordAuthenticationFilter])
@@ -50,8 +56,8 @@ class SecurityConfig extends WebSecurityConfigurerAdapter(true) {
     auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder)
   }
 
-  @Bean def tokenAuthenticationService: TokenAuthenticationService = {
-    new TokenAuthenticationService(SECRET, adminService)
+  @Bean def tokenService: TokenService = {
+    new TokenService(adminService, applicationService)
   }
 
   @Bean def statelessAuthenticationFilter: StatelessAuthenticationFilter = {
@@ -60,7 +66,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter(true) {
 
   @Bean
   def statelessLoginFilter: StatelessLoginFilter = {
-    new StatelessLoginFilter("/api/loginAdmin", authenticationManager())
+    new StatelessLoginFilter("/api/application/{appId}/login", authenticationManager(), adminService, tokenService)
   }
 
   @Bean override def userDetailsService: AdminService = {
