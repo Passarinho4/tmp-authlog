@@ -36,6 +36,7 @@ object ApplicationRepository {
   private val idKey = DocKey("_id", BsonCodec.objectId)
   private val nameKey = DocKey("name", BsonCodec.string)
   private val adminKey = DocKey("admin", BsonCodec.string)
+  private val secretKey = DocKey("secret", BsonCodec.string)
   private val fbLoginKey = DocKey("fbLogin", fbLoginDataCodec)
   private val credentialsLoginKey = DocKey("credentialsLogin", BsonCodec.boolean)
   private val redirectURLKey = DocKey("redirectURL", BsonCodec.string)
@@ -46,6 +47,7 @@ object ApplicationRepository {
       Application(doc.require(idKey),
         doc.require(nameKey),
         doc.require(adminKey),
+        doc.require(secretKey),
         doc.get(fbLoginKey),
         doc.require(credentialsLoginKey),
         doc.get(redirectURLKey)
@@ -55,6 +57,7 @@ object ApplicationRepository {
       .put(idKey, app.id)
       .put(nameKey, app.name)
       .put(adminKey, app.admin)
+      .put(secretKey, app.secret)
       .putOpt(fbLoginKey, app.fbLogin)
       .put(credentialsLoginKey, app.credentialsLogin)
       .putOpt(redirectURLKey, app.redirectURL)
