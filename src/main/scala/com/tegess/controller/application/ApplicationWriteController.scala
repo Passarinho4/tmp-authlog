@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation._
 
+import scala.Option
+
 @RestController
 @Component
 class ApplicationWriteController {
@@ -17,12 +19,17 @@ class ApplicationWriteController {
 
   @RequestMapping(value=Array("/api/applications"), method=Array(RequestMethod.POST))
   def createApplication(@RequestBody applicationData: ApplicationData) = {
-    val app = Application(
-      "application",
+
+    val fbLoginData = for {
+      fbSecret <- applicationData.facebookSecret
+      fbAppId <- applicationData.facebookAppId
+    } yield FbLoginData(fbAppId, fbSecret)
+
+    val app = Application("application",
       "admin",
-      Some(FbLoginData(applicationData.facebookAppId, applicationData.secret)),
+      fbLoginData,
       credentialsLogin = false,
-      Some(applicationData.facebookRedirectURI))
+      applicationData.facebookRedirectURI)
 
     applicationService.save(app)
   }

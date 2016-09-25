@@ -20,11 +20,16 @@ class ApplicationReadController {
   @RequestMapping(value=Array("/api/applications"), method=Array(RequestMethod.GET))
   def getApplications(): List[ApplicationData] = {
     val applications = applicationService.findAll()
-    for{
+    for {
       application <- applications
-      fbLogin <- application.fbLogin
-      redirectUrl <- application.redirectURL
-    } yield ApplicationData(application.id.toHexString, fbLogin.id, redirectUrl, fbLogin.secret)
+    } yield {
+      ApplicationData(application.id.toHexString,
+        application.secret,
+        application.fbLogin.map(_.id),
+        application.redirectURL,
+        application.fbLogin.map(_.secret))
+    }
+
   }
 
   @RequestMapping(value=Array("/api/applications/{appId}/hourLoginStats"), method=Array(RequestMethod.GET))
@@ -41,6 +46,10 @@ class ApplicationReadController {
 
 }
 object ApplicationReadController {
-  case class ApplicationData(appId: String, facebookAppId: String, facebookRedirectURI: String, secret: String)
+  case class ApplicationData(appId: String,
+                             secret: String,
+                             facebookAppId: Option[String],
+                             facebookRedirectURI: Option[String],
+                             facebookSecret: Option[String])
   case class MinuteStatistics(time: Long, amount: Long)
 }

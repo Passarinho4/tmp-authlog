@@ -1,10 +1,11 @@
 package com.tegess.controller.user
 
-import java.util.UUID
+import java.util.{Locale, UUID}
 import javax.servlet.http.HttpServletRequest
 
 import com.tegess.controller._
-import com.tegess.controller.user.UserWriteController.NewUserRequest
+import com.tegess.controller.user.UserReadController.UserData
+import com.tegess.controller.user.UserWriteController.{EditUserRequest, NewUserRequest}
 import com.tegess.domain.user.{CredentialsLogin, FacebookLogin, User, UserPhoto}
 import com.tegess.persistance.service.user.UserService
 import org.bson.types.ObjectId
@@ -65,6 +66,21 @@ class UserWriteController {
   }
 
   @PreAuthorize(value = "authentication.getName() == #id.concat(#userId)")
+  @RequestMapping(value=Array("/api/applications/{id}/users/{userId}"), method=Array(RequestMethod.PUT))
+  def updateUser(@PathVariable id: String,
+                 @PathVariable userId: String,
+                 @RequestBody userData: EditUserRequest) = {
+  for {
+    applicationId <- Try(new ObjectId(id))
+    user <- userService.findOne(applicationId, userId).toTry
+  } {
+    val updatedUser = user.copy(mail = userData.mail, gender = userData.gender, locale = userData.locale.map(Locale.forLanguageTag))
+    userService.save(updatedUser)
+  }
+
+  }
+
+  @PreAuthorize(value = "authentication.getName() == #id.concat(#userId)")
   @RequestMapping(value=Array("/api/applications/{id}/users/{userId}/photo"), method=Array(RequestMethod.POST))
   def uploadAndSetUserPhoto(@RequestBody file: MultipartFile,
                             @PathVariable id: String,
@@ -105,5 +121,6 @@ class UserWriteController {
   }
 }
 object UserWriteController {
+  case class EditUserRequest(mail: Option[String], gender: Option[String], locale: Option[String])
   case class NewUserRequest(username: String, password: String, mail: String, picture: Option[String])
 }

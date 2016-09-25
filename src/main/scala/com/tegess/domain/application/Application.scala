@@ -1,10 +1,13 @@
 package com.tegess.domain.application
 
+import java.util.UUID
+
 import org.bson.types.ObjectId
 
 case class Application(id: ObjectId,
                        name: String,
                        admin: String,
+                       secret: String,
                        fbLogin: Option[FbLoginData],
                        credentialsLogin: Boolean,
                        redirectURL: Option[String])
@@ -17,9 +20,12 @@ object Application {
             fbLogin: Option[FbLoginData],
             credentialsLogin: Boolean,
             redirectURL: Option[String]): Application =
-    new Application(new ObjectId(), name, admin, fbLogin, credentialsLogin, redirectURL)
+    new Application(new ObjectId(),
+      name,
+      admin,
+      UUID.randomUUID().toString,
+      fbLogin,
+      credentialsLogin,
+      redirectURL)
 
-  def apply(name: String,
-            admin: String): Application =
-    new Application(new ObjectId(), name, admin, None, false, None)
 }

@@ -37,7 +37,7 @@ class TokenService(val adminService: AdminService, val applicationService: Appli
   private def parseUserFromToken(token: String): Admin = {
     val result = for {
       applicationId <- JwtTokenApplicationIdParser.parse(token)
-      secret <- Try(applicationService.findOne(applicationId).get.fbLogin.get.secret)
+      secret <- Try(applicationService.findOne(applicationId).get.secret)
     } yield {
       val claims: Claims = Jwts.parser.setSigningKey(Base64.encode(secret.getBytes)).parseClaimsJws(token).getBody
       val userDetails: UserDetails = adminService.loadUserByUsername(applicationId.toHexString + claims.get(USERNAME_KEY, classOf[String]))
@@ -53,7 +53,7 @@ class TokenService(val adminService: AdminService, val applicationService: Appli
   private def createTokenForAdmin(admin: Admin): String = {
     val result = for {
       application <- Try(applicationService.findOne(admin.getApplicationId).get)
-      secret <- Try(application.fbLogin.get.secret) // TODO create special secret field in application (split app secret from fb secret)
+      secret <- Try(application.secret)
     } yield {
       val jwtBuilder: JwtBuilder = Jwts.builder
         .setSubject(admin.getRealUsername)

@@ -20,7 +20,7 @@ object TokenGenerator {
       .setClaims(claims)
       .setHeaderParam(TokenService.TYP_KEY, TokenService.JWT)
       .setHeaderParam(TokenService.APPLICATION_KEY, application.id.toHexString)
-      .signWith(SignatureAlgorithm.HS256, Base64.encode(application.fbLogin.get.secret.getBytes)) //!!!!!!!!!!!!!! secret != fbsecret!!!!!!!!!!
+      .signWith(SignatureAlgorithm.HS256, Base64.encode(application.secret.getBytes))
 
     jwtBuilder.compact
   }
