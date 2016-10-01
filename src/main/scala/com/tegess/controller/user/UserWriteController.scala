@@ -86,15 +86,20 @@ class UserWriteController {
                             @PathVariable id: String,
                             @PathVariable userId: String,
                             request: HttpServletRequest) = {
-    for {
+    val updateResult = for {
       applicationId <- Try(new ObjectId(id))
       user <- userService.findOne(applicationId, userId).toTry
       filename = UUID.randomUUID().toString
       updatedUser = user.copy(pictureUrl = Some(request.getScheme + "://" + request.getServerName + ":" + request.getServerPort + request.getServletPath + "/" + filename))
       userPhoto = UserPhoto(filename, file.getBytes, MimeType.valueOf(file.getContentType))
-    } {
+    } yield {
       userService.save(updatedUser)
       userService.save(userPhoto)
+      Success
+    }
+    updateResult match {
+      case Success(_) =>
+      case Failure(e) => throw e
     }
 
   }
