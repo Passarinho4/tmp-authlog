@@ -1,16 +1,20 @@
 package com.tegess.controller.application
 
+import com.tegess.config.newsecurity.TokenService
 import com.tegess.controller.application.ApplicationReadController.{ApplicationData, MinuteStatistics}
+import com.tegess.domain.admin.Admin
 import com.tegess.persistance.service.application.ApplicationService
 import com.tegess.persistance.service.event.LoginEventService
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod, RestController}
+import org.springframework.web.bind.annotation
+import org.springframework.web.bind.annotation.{PathVariable, RequestMapping, RequestMethod}
 
 import scala.util.{Failure, Success, Try}
 
-@RestController
+@annotation.RestController
 @Component
 class ApplicationReadController {
 
@@ -18,8 +22,9 @@ class ApplicationReadController {
   @Autowired var loginEventService: LoginEventService = _
 
   @RequestMapping(value=Array("/api/applications"), method=Array(RequestMethod.GET))
-  def getApplications(): List[ApplicationData] = {
-    val applications = applicationService.findAll()
+  def getApplications(authentication: Authentication): List[ApplicationData] = {
+    val admin = authentication.getPrincipal.asInstanceOf[Admin]
+    val applications = applicationService.findAll(admin)
     for {
       application <- applications
     } yield {
