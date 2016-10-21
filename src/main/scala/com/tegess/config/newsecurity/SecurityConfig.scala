@@ -34,7 +34,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter(true) {
       .servletApi.and
       .authorizeRequests
       .antMatchers("/").authenticated
-      .antMatchers("/api/test2").permitAll()
+      .antMatchers("/api/install").permitAll()
       .antMatchers("/api/application/{appId}/login").permitAll
       .antMatchers("/api/login/facebook").permitAll
       .antMatchers("/api/login/credentials").permitAll

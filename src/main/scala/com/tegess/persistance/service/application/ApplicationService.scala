@@ -14,7 +14,7 @@ class ApplicationService @Autowired() (val repository: ApplicationRepository) {
 
   def save(application: Application) = repository.save(application)
   def findOne(id: ObjectId) = Option(repository.findOne(id))
-  def findAll(admin: Admin) = repository.findAll(admin.getUsername)
+  def findAll(admin: Admin) = repository.findAll(admin.getRealUsername)
   def findAll() = repository.findAll()
   def remove(id: ObjectId) = repository.remove(id)
   def remove(application: Application) = repository.remove(application.id)
