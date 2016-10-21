@@ -14,7 +14,11 @@ import com.mongodb.client.model.UpdateOptions
 class UserRepository (collection: MongoCollection[User]) {
 
   import UserRepository._
-  def save(user: User) = collection.replaceOne(Filter.eq(usernameKey, user.username), user, new UpdateOptions().upsert(true))
+  def save(user: User) = collection.replaceOne(
+    Filter.and(
+      Filter.eq(usernameKey, user.username),
+      Filter.eq(applicationKey, user.application)),
+    user, new UpdateOptions().upsert(true))
   def findOne(application: ObjectId, username: String) = collection.find(
     Filter.and(Filter.eq(applicationKey, application), Filter.eq(usernameKey, username)))
     .first()
