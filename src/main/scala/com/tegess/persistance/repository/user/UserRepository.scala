@@ -43,7 +43,7 @@ object UserRepository {
     locale => Doc().put(languageTagKey, locale.toLanguageTag).toBson
   )
 
-  private val usernameKey = DocKey("_id", BsonCodec.string)
+  private val usernameKey = DocKey("username", BsonCodec.string)
   private val applicationKey = DocKey("application", BsonCodec.objectId)
   private val loginTypesKey: DocKey[List[LoginType], BsonArray] = DocKey("loginTypes", loginTypeCodec.collection)
   private val passwordKey = DocKey("password", BsonCodec.string)

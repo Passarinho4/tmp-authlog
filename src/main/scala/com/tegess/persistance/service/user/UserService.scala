@@ -8,7 +8,12 @@ import org.bson.types.ObjectId
 class UserService(userRepo: UserRepository, userPhotoRepo: UserPhotoRepository) {
 
   //user
-  def save(user: User) = userRepo.save(user)
+  def save(user: User) = {
+    if(findOne(user.application, user.username).isDefined){
+      throw new IllegalArgumentException("This user exists in DB.")
+    }
+    userRepo.save(user)
+  }
   def findOne(application: Application, username: String) = userRepo.findOne(application.id, username)
   def findOne(applicationId: ObjectId, username: String) = Option(userRepo.findOne(applicationId, username))
   def findAll(application: Application) = userRepo.findAll(application.id)
