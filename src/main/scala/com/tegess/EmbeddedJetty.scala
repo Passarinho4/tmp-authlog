@@ -13,5 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 class SampleConfig
 
 object EmbeddedJetty extends App {
+
   SpringApplication.run(classOf[SampleConfig])
 }
