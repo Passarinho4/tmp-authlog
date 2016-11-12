@@ -1,10 +1,12 @@
 package com.tegess.controller.application
 
 import com.tegess.controller.application.ApplicationReadController.ApplicationData
+import com.tegess.domain.admin.Admin
 import com.tegess.domain.application.{Application, FbLoginData}
 import com.tegess.persistance.service.application.ApplicationService
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation._
 
@@ -18,7 +20,8 @@ class ApplicationWriteController {
   var applicationService: ApplicationService = _
 
   @RequestMapping(value=Array("/api/applications"), method=Array(RequestMethod.POST))
-  def createApplication(@RequestBody applicationData: ApplicationData) = {
+  def createApplication(@RequestBody applicationData: ApplicationData, authentication: Authentication) = {
+    val admin = authentication.getPrincipal.asInstanceOf[Admin]
 
     val fbLoginData = for {
       fbSecret <- applicationData.facebookSecret
@@ -26,7 +29,7 @@ class ApplicationWriteController {
     } yield FbLoginData(fbAppId, fbSecret)
 
     val app = Application("application",
-      "admin",
+      admin.getRealUsername,
       fbLoginData,
       credentialsLogin = false,
       applicationData.facebookRedirectURI)
