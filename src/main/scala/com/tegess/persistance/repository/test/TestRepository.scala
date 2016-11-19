@@ -5,6 +5,8 @@ import com.mongodb.client.MongoCollection
 import com.tegess.domain.test.Test
 import org.bson.{BsonArray, BsonDocument, BsonString}
 
+import scala.collection.immutable.IndexedSeq
+
 class TestRepository(val collection: MongoCollection[Test]) {
 
 
