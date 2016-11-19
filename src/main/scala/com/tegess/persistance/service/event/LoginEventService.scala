@@ -18,6 +18,10 @@ class LoginEventService @Autowired() (val repository: LoginEventRepository) {
     repository.save(LoginEvent(new ObjectId, application.id, user.username, new DateTime()))
   }
 
+  def publishLoginEvent(applicationId: ObjectId, username:String) = {
+    repository.save(LoginEvent(new ObjectId(), applicationId, username, new DateTime()))
+  }
+
   def getHourLoginStats(applicationId: ObjectId): IndexedSeq[(Long, Long)] = {
     val now = new DateTime()
       .withSecondOfMinute(0)
