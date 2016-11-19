@@ -29,6 +29,7 @@ class ApplicationReadController {
       application <- applications
     } yield {
       ApplicationData(application.id.toHexString,
+        application.name,
         application.secret,
         application.fbLogin.map(_.id),
         application.redirectURL,
@@ -52,6 +53,7 @@ class ApplicationReadController {
 }
 object ApplicationReadController {
   case class ApplicationData(appId: String,
+                             name: String,
                              secret: String,
                              facebookAppId: Option[String],
                              facebookRedirectURI: Option[String],

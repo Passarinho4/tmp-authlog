@@ -28,7 +28,11 @@ class ApplicationWriteController {
       fbAppId <- applicationData.facebookAppId
     } yield FbLoginData(fbAppId, fbSecret)
 
-    val app = Application("application",
+    if(applicationData.name == null) {
+      throw new IllegalArgumentException("Application name can't be null")
+    }
+
+    val app = Application(applicationData.name,
       admin.getRealUsername,
       fbLoginData,
       credentialsLogin = false,
