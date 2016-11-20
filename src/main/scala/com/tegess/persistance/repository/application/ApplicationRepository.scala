@@ -1,17 +1,23 @@
 package com.tegess.persistance.repository.application
 
+import com.avsystem.commons.jiop.JavaInterop._
 import com.avsystem.commons.mongo.{BsonCodec, Doc, DocKey, Filter}
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.model.UpdateOptions
 import com.tegess.domain.application.{Application, FbLoginData}
 import org.bson.BsonDocument
 import org.bson.types.ObjectId
-import com.avsystem.commons.jiop.JavaInterop._
 
 private[persistance] class ApplicationRepository(collection: MongoCollection[Application]) {
 
   import ApplicationRepository._
 
-  def save(application: Application) = collection.insertOne(application)
+  def save(application: Application) = {
+    collection.replaceOne(
+      Filter.eq(idKey, application.id),
+      application,
+      new UpdateOptions().upsert(true))
+  }
   def findOne(id: ObjectId) = collection.find(Filter.eq(idKey, id)).first()
   def findAll(username: String) = collection.find(Filter.eq(adminKey, username)).into[JList[Application]](new JArrayList).asScala.toList
   def findAll() = collection.find().into[JList[Application]](new JArrayList).asScala.toList
