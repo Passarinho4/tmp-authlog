@@ -4,7 +4,7 @@ import java.util.Collections
 
 import com.avsystem.commons.mongo.MongoOps.DBOps
 import com.mongodb.client.MongoDatabase
-import com.mongodb.{MongoClient, MongoCredential, ServerAddress}
+import com.mongodb._
 import com.tegess.domain.application.Application
 import com.tegess.domain.event.LoginEvent
 import com.tegess.domain.user.{User, UserPhoto}
@@ -23,7 +23,8 @@ class MongoConfig {
   @Bean def mongoClient: MongoClient = {
     val credential: MongoCredential = MongoCredential.createCredential("Passarinho", "admin", "Passarinho123".toCharArray)
     val serverAddress: ServerAddress = new ServerAddress("51.255.48.55", 27017)
-    new MongoClient(serverAddress, Collections.singletonList(credential))
+    val options = MongoClientOptions.builder().connectionsPerHost(10).build()
+    new MongoClient(serverAddress, Collections.singletonList(credential), options)
   }
 
   @Bean

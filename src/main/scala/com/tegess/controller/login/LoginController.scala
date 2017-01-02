@@ -1,12 +1,20 @@
 package com.tegess.controller.login
 
+import java.util
 import java.util.Locale
 
+import com.avsystem.commons._
+import com.tegess.controller._
+import com.tegess.controller.login.FacebookHelper.{FacebookApplicationTokenResponse, FacebookTokenResponse, FacebookUserData, FacebookValidateTokenResponse}
 import com.tegess.controller.login.LoginController._
+import com.tegess.domain.user.{FacebookLogin, User}
 import com.tegess.persistance.service.application.ApplicationService
+import com.tegess.persistance.service.event.LoginEventService
 import com.tegess.persistance.service.user.UserService
 import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpMethod
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.util.Base64Utils
 import org.springframework.web.bind.annotation._
@@ -14,13 +22,6 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.view.RedirectView
 
 import scala.util.{Failure, Success, Try}
-import com.avsystem.commons._
-import com.tegess.controller._
-import com.tegess.controller.login.FacebookHelper.{FacebookApplicationTokenResponse, FacebookTokenResponse, FacebookUserData, FacebookValidateTokenResponse}
-import com.tegess.domain.user.{FacebookLogin, User}
-import com.tegess.persistance.service.event.LoginEventService
-import org.springframework.http.HttpMethod
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 
 @RestController
 @Component
@@ -30,6 +31,7 @@ class LoginController {
   @Autowired var userService: UserService = _
   @Autowired var loginEventService: LoginEventService = _
   @Autowired var restTemplate: RestTemplate = _
+  @Autowired var passwordEncoder:PasswordEncoder = _
 
   @RequestMapping(value = Array("api/login/credentials"), method = Array(RequestMethod.GET))
   def loginByCredentials(@RequestParam appId: String, @RequestHeader(value = "Authorization") credentials: String): TokenResponse = {
@@ -38,14 +40,13 @@ class LoginController {
       applicationId <- Try(new ObjectId(appId))
       user <- Try(userService.findOne(applicationId, loginPassword.login).get)
       password <- Try(user.password.get)
-      if new BCryptPasswordEncoder().matches(loginPassword.password, password)
+      if passwordEncoder.matches(loginPassword.password, password)
       application <- Try(applicationService.findOne(applicationId).get)
       token = TokenGenerator.generateJWTTokenForUser(application, user)
     } yield {
       loginEventService.publishLoginEvent(application, user)
       TokenResponse(token)
     }
-
     result match {
       case Success(token) => token
       case Failure(e) => throw new IllegalArgumentException("Wrong parameters - ", e)

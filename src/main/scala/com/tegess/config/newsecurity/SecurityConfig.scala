@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.{EnableWebSecurity, WebSecurityConfigurerAdapter}
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
@@ -52,8 +53,13 @@ class SecurityConfig extends WebSecurityConfigurerAdapter(true) {
       .headers().cacheControl()
   }
 
+  @Bean
+  def passwordEncoder:PasswordEncoder = {
+    new BCryptPasswordEncoder(4)
+  }
+
   override protected def configure(auth: AuthenticationManagerBuilder) {
-    auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder)
+    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder)
   }
 
   @Bean def tokenService: TokenService = {

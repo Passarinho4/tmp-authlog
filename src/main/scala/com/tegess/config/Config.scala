@@ -9,6 +9,8 @@ import com.tegess.domain.test.Test
 import com.tegess.persistance.repository.test.TestRepository
 import org.bson.BsonDocument
 import org.springframework.context.annotation.{Bean, Configuration}
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 
 @Configuration
 class Config {

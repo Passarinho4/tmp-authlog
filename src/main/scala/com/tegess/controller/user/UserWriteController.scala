@@ -13,20 +13,24 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.{MediaType, ResponseEntity}
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.util.MimeType
+import org.springframework.web.bind.annotation
 import org.springframework.web.bind.annotation._
 import org.springframework.web.multipart.MultipartFile
 
 import scala.util.{Failure, Success, Try}
 
 
-@RestController
+@annotation.RestController
 @Component
 class UserWriteController {
 
   @Autowired
   var userService: UserService = _
+  @Autowired
+  var passwordEncoder: PasswordEncoder = _
 
   @RequestMapping(value=Array("/api/applications/{id}/users"), method=Array(RequestMethod.POST))
   def createUser(@RequestBody newUser: NewUserRequest, @PathVariable id: String) = {
@@ -34,7 +38,7 @@ class UserWriteController {
     val user = User(newUser.username,
       appId,
       List(FacebookLogin, CredentialsLogin),
-      Option(new BCryptPasswordEncoder().encode(newUser.password)),
+      Option(passwordEncoder.encode(newUser.password)),
       Option(newUser.mail),
       newUser.picture,
       None,
