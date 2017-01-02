@@ -17,13 +17,14 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.util.Base64Utils
+import org.springframework.web.bind
 import org.springframework.web.bind.annotation._
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.view.RedirectView
 
 import scala.util.{Failure, Success, Try}
 
-@RestController
+@bind.annotation.RestController
 @Component
 class LoginController {
 
